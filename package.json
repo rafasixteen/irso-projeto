@@ -2,7 +2,6 @@
 	"name": "irso-projeto",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
 	"scripts": {
 		"format": "npx prettier --write \"**/*.php\"",
 		"dev": "docker-compose -f compose.yaml up -d --build"
