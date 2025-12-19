@@ -3,8 +3,7 @@
 	"version": "1.0.0",
 	"scripts": {
 		"format": "npx prettier --write \"**/*.php\"",
-		"dev": "docker-compose -f compose.yaml up -d --build",
-		"down": "docker-compose -f compose.yaml down"
+		"dev": "php -S localhost:8000 -t public"
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.24.0",

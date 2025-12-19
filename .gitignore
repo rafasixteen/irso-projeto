@@ -1,5 +1,2 @@
-*.pdf
-*.docx
-*.pkt
-
 node_modules/
+/vendor/
