@@ -36,6 +36,36 @@ $router->map('GET', '/home', function () {
 	require __DIR__ . '/../public/home/index.php';
 });
 
+// RFID API routes
+
+$router->map('GET', '/api/rfid/users', function () {
+	require __DIR__ . '/../api/rfid/get_users.php';
+});
+
+$router->map('POST', '/api/rfid/users', function () {
+	require __DIR__ . '/../api/rfid/add_user.php';
+});
+
+$router->map('GET', '/api/rfid/users[a:id]', function ($id) {
+	require __DIR__ . '/../api/rfid/get_user.php';
+});
+
+$router->map('POST', '/api/rfid/users[a:id]', function ($id) {
+	require __DIR__ . '/../api/rfid/update_user.php';
+});
+
+$router->map('DELETE', '/api/rfid/users[a:id]', function ($id) {
+	require __DIR__ . '/../api/rfid/delete_user.php';
+});
+
+$router->map('GET', '/api/rfid/scan', function () {
+	require __DIR__ . '/../api/rfid/scan.php';
+});
+
+$router->map('GET', '/api/rfid/logs', function () {
+	require __DIR__ . '/../api/rfid/.php';
+});
+
 // Sensor API routes
 
 $router->map('GET', '/api/sensor/[a:name]', function ($name) {

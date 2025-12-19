@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "name": "Rafael Rego",
+        "rfidTag": "test"
+    },
+    {
+        "id": 2,
+        "name": "Rafael Rego",
+        "rfidTag": "27918e0e"
+    },
+    {
+        "id": 3,
+        "name": "Rafael Rego",
+        "rfidTag": "0766f16b"
+    }
+]
