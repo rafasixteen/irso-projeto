@@ -4,9 +4,9 @@ declare(strict_types=1);
 use App\Service\ActuatorService;
 
 $service = new ActuatorService();
-$actuators = $service->getAll();
+$Actuators = $service->getHistory($name);
 
 header('Content-Type: application/json');
 echo json_encode([
-	'actuators' => $actuators,
+	'history' => $Actuators,
 ]);

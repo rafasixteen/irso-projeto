@@ -14,29 +14,29 @@ $router = new AltoRouter();
 // Sensor API routes
 
 $router->map('GET', '/api/sensor/[a:name]', function ($name) {
-	require __DIR__ . '/../api/sensor/get.php';
+	require __DIR__ . '/../api/sensor/get-history.php';
 });
 
 $router->map('GET', '/api/sensors', function () {
-	require __DIR__ . '/../api/sensor/get-all.php';
+	require __DIR__ . '/../api/sensor/get-all-names.php';
 });
 
 $router->map('POST', '/api/sensor/[a:name]', function ($name) {
-	require __DIR__ . '/../api/sensor/set.php';
+	require __DIR__ . '/../api/sensor/append-value.php';
 });
 
 // Actuator API routes
 
 $router->map('GET', '/api/actuator/[a:name]', function ($name) {
-	require __DIR__ . '/../api/actuator/get.php';
+	require __DIR__ . '/../api/actuator/get-history.php';
 });
 
 $router->map('GET', '/api/actuators', function () {
-	require __DIR__ . '/../api/actuator/get-all.php';
+	require __DIR__ . '/../api/actuator/get-all-names.php';
 });
 
 $router->map('POST', '/api/actuator/[a:name]', function ($name) {
-	require __DIR__ . '/../api/actuator/set.php';
+	require __DIR__ . '/../api/actuator/append-value.php';
 });
 
 $match = $router->match();
