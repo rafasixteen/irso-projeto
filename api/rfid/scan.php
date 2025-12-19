@@ -4,7 +4,6 @@ declare(strict_types=1);
 header('Content-Type: application/json');
 
 $body = json_decode(file_get_contents('php://input'), true);
-
 $tag = $body['tag'] ?? null;
 $door = $body['door'] ?? null;
 

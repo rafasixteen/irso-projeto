@@ -2,6 +2,7 @@
 	"name": "irso-projeto",
 	"version": "1.0.0",
 	"scripts": {
+		"init": "composer install && npm install",
 		"format": "npx prettier --write \"**/*.php\"",
 		"dev": "php -S localhost:8000 -t public"
 	},

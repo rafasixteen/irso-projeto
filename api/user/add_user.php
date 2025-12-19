@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 header('Content-Type: application/json');
 
-$body = json_decode(file_get_contents('php://input'), true);
+use App\USers\UserService;
 
+$body = json_decode(file_get_contents('php://input'), true);
 $name = $body['name'] ?? null;
 
 if (empty($name)) {
@@ -13,14 +14,12 @@ if (empty($name)) {
 		'error' => [
 			'message' => 'Invalid request format',
 			'expected' => [
-				'name' => 'USER_NAME',
+				'name' => 'NAME',
 			],
 		],
 	]);
 	exit();
 }
-
-use App\Service\UserService;
 
 $userService = new UserService();
 $success = $userService->create($name);
