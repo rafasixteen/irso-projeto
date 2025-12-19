@@ -11,6 +11,25 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $router = new AltoRouter();
 
+// Authentication middleware under /api routes
+
+if (str_starts_with($_SERVER['REQUEST_URI'], '/api')) {
+	$headers = getallheaders();
+	$token = $headers['Authorization'] ?? '';
+
+	// Expect token in format: Bearer <token>
+	if (str_starts_with($token, 'Bearer ')) {
+		$token = substr($token, 7);
+	}
+
+	if ($token !== md5('ProjetoIRSO')) {
+		http_response_code(401);
+		header('Content-Type: application/json');
+		echo json_encode(['error' => 'Unauthorized']);
+		exit();
+	}
+}
+
 // Sensor API routes
 
 $router->map('GET', '/api/sensor/[a:name]', function ($name) {
