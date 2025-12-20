@@ -3,18 +3,25 @@ declare(strict_types=1);
 
 namespace App\Users;
 
+use RuntimeException;
+
 class UserService
 {
-	protected string $filePath;
+	protected string $storageDir = __DIR__ . '/../../storage/users';
+
+	protected string $storagePath;
+
+	protected string $counterPath;
 
 	public function __construct()
 	{
-		$this->filePath = __DIR__ . '/../../storage/users.json';
+		$this->storagePath = $this->storageDir . '/users.json';
+		$this->counterPath = $this->storageDir . '/user_id_counter.txt';
 	}
 
 	public function create(string $userName): bool
 	{
-		$newUserId = $this->get_user_count() + 1;
+		$newUserId = $this->generate_incremental_id($this->counterPath);
 		$newUserRfidTag = $this->get_unique_rfid_tag();
 		$newUser = new User($newUserId, $userName, $newUserRfidTag);
 
@@ -73,11 +80,11 @@ class UserService
 
 	public function get_users(): array
 	{
-		if (!file_exists($this->filePath)) {
+		if (!file_exists($this->storagePath)) {
 			return [];
 		}
 
-		$json = file_get_contents($this->filePath);
+		$json = file_get_contents($this->storagePath);
 		$data = json_decode($json, true) ?? [];
 
 		return array_map(fn($item) => User::fromArray($item), $data);
@@ -87,13 +94,7 @@ class UserService
 	{
 		$data = array_map(fn(User $user) => $user->toArray(), $users);
 		$json = json_encode($data, JSON_PRETTY_PRINT);
-		return file_put_contents($this->filePath, $json) !== false;
-	}
-
-	private function get_user_count(): int
-	{
-		$users = $this->get_users();
-		return count($users);
+		return file_put_contents($this->storagePath, $json) !== false;
 	}
 
 	private function get_unique_rfid_tag(): string
@@ -118,5 +119,34 @@ class UserService
 	private function random_rfid_tag(): string
 	{
 		return bin2hex(random_bytes(4));
+	}
+
+	function generate_incremental_id(string $path): int
+	{
+		$dir = dirname($path);
+
+		if (!is_dir($dir)) {
+			mkdir($dir, 0777, true);
+		}
+
+		$fp = fopen($path, 'c+');
+
+		if (!$fp) {
+			throw new RuntimeException('Cannot open file at: ' . $path);
+		}
+
+		flock($fp, LOCK_EX);
+
+		$current = (int) trim(stream_get_contents($fp));
+		$next = $current + 1;
+
+		rewind($fp);
+		ftruncate($fp, 0);
+		fwrite($fp, (string) $next);
+
+		flock($fp, LOCK_UN);
+		fclose($fp);
+
+		return $next;
 	}
 }
