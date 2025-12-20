@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 use App\USers\UserService;
 
 $userService = new UserService();
-$users = $userService->getUsers();
+$users = $userService->get_users();
 
 if ($users) {
 	echo json_encode($users);
