@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 header('Content-Type: application/json');
 
-use App\USers\UserService;
+use App\Users\UserService;
 
 $id = (int) $id;
 $userService = new UserService();
@@ -15,7 +15,7 @@ if (!$userService->exists($id)) {
 	exit();
 }
 
-$user = $userService->read($id);
+$user = $userService->get_user_by_id($id);
 
 if ($user) {
 	echo json_encode($user);

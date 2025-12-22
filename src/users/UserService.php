@@ -19,18 +19,17 @@ class UserService
 		$this->counterPath = $this->storageDir . '/user_id_counter.txt';
 	}
 
-	public function create(string $userName): bool
+	public function create(string $name, string $role, string $gender): bool
 	{
 		$newUserId = $this->generate_incremental_id($this->counterPath);
 		$newUserRfidTag = $this->get_unique_rfid_tag();
-		$newUser = new User($newUserId, $userName, $newUserRfidTag);
-
+		$newUser = new User($newUserId, $name, $role, $gender, $newUserRfidTag);
 		$users = $this->get_users();
 		array_push($users, $newUser);
 		return $this->save_users($users);
 	}
 
-	public function read(int $id): ?User
+	public function get_user_by_id(int $id): ?User
 	{
 		$users = $this->get_users();
 
@@ -43,13 +42,28 @@ class UserService
 		return null;
 	}
 
-	public function update(int $id, string $newName): bool
+	public function get_user_by_rfid(string $rfidTag): ?User
+	{
+		$users = $this->get_users();
+
+		foreach ($users as $user) {
+			if ($user->rfidTag === $rfidTag) {
+				return $user;
+			}
+		}
+
+		return null;
+	}
+
+	public function update(int $id, string $newName, string $newRole, string $newGender): bool
 	{
 		$users = $this->get_users();
 
 		foreach ($users as $user) {
 			if ($user->id === $id) {
 				$user->name = $newName;
+				$user->role = $newRole;
+				$user->gender = $newGender;
 
 				return $this->save_users($users);
 			}

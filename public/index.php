@@ -58,6 +58,24 @@ $router->map('DELETE', '/api/users/[i:id]', function ($id) {
 	require __DIR__ . '/../api/user/delete_user.php';
 });
 
+// Door API routes
+
+$router->map('POST', '/api/doors', function () {
+	require __DIR__ . '/../api/door/add_door.php';
+});
+
+$router->map('GET', '/api/doors/[*:id]', function ($id) {
+	require __DIR__ . '/../api/door/get_history.php';
+});
+
+$router->map('POST', '/api/doors/[*:id]', function ($id) {
+	require __DIR__ . '/../api/door/update_door.php';
+});
+
+$router->map('DELETE', '/api/doors/[*:id]', function ($id) {
+	require __DIR__ . '/../api/door/delete_door.php';
+});
+
 // RFID API routes
 
 $router->map('GET', '/api/rfid/scan', function () {
@@ -65,7 +83,7 @@ $router->map('GET', '/api/rfid/scan', function () {
 });
 
 $router->map('GET', '/api/rfid/logs', function () {
-	require __DIR__ . '/../api/rfid/.php';
+	require __DIR__ . '/../api/rfid/logs.php';
 });
 
 // Sensor API routes

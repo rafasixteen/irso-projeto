@@ -1,12 +1,23 @@
 [
     {
-        "id": 1,
-        "name": "rafasixteen",
-        "rfidTag": "df3d83b9"
+        "id": 5,
+        "name": "Rafael",
+        "role": "admin",
+        "gender": "M",
+        "rfidTag": "394a6ee5"
     },
     {
-        "id": 2,
-        "name": "Tiago Laim",
-        "rfidTag": "764a088d"
+        "id": 6,
+        "name": "Tiago",
+        "role": "admin",
+        "gender": "M",
+        "rfidTag": "1f8402a6"
+    },
+    {
+        "id": 7,
+        "name": "Luana",
+        "role": "member",
+        "gender": "F",
+        "rfidTag": "2c4af384"
     }
 ]
