@@ -65,20 +65,24 @@ $router->map('GET', '/api/users', function () {
 
 // Door API routes
 
+// Create a new door
 $router->map('POST', '/api/doors', function () {
-	require __DIR__ . '/../api/door/add_door.php';
+	require __DIR__ . '/../api/doors/add_door.php';
 });
 
+// Get a door by ID
 $router->map('GET', '/api/doors/[*:id]', function ($id) {
-	require __DIR__ . '/../api/door/get_history.php';
+	require __DIR__ . '/../api/doors/get_door.php';
 });
 
+// Update a door by ID
 $router->map('POST', '/api/doors/[*:id]', function ($id) {
-	require __DIR__ . '/../api/door/update_door.php';
+	require __DIR__ . '/../api/doors/update_door.php';
 });
 
+// Delete a door by ID
 $router->map('DELETE', '/api/doors/[*:id]', function ($id) {
-	require __DIR__ . '/../api/door/delete_door.php';
+	require __DIR__ . '/../api/doors/delete_door.php';
 });
 
 // RFID API routes
