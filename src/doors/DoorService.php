@@ -61,8 +61,11 @@ class DoorService
 			return false;
 		}
 
-		$this->save_doors(array_values($filtered));
-		return true;
+		if (!$this->save_doors(array_values($filtered))) {
+			return false;
+		}
+
+		return $this->delete_history($id);
 	}
 
 	public function exists(string $id): bool
@@ -129,5 +132,17 @@ class DoorService
 		];
 
 		return file_put_contents($this->historyFile, json_encode($logs, JSON_PRETTY_PRINT)) !== false;
+	}
+
+	private function delete_history(string $doorId): bool
+	{
+		if (!file_exists($this->historyFile)) {
+			return true;
+		}
+
+		$logs = json_decode(file_get_contents($this->historyFile), true) ?? [];
+		$filtered = array_filter($logs, fn($log) => $log['door'] !== $doorId);
+
+		return file_put_contents($this->historyFile, json_encode(array_values($filtered), JSON_PRETTY_PRINT)) !== false;
 	}
 }
