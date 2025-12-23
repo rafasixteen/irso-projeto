@@ -107,9 +107,9 @@ class DoorService
 		return (object) end($history);
 	}
 
-	public function add_history_entry(string $id, string $state): bool
+	public function add_history_entry(string $doorId, string $state): bool
 	{
-		$file = $this->get_history_file($id);
+		$file = $this->get_history_file($doorId);
 
 		$dir = dirname($file);
 
@@ -127,12 +127,7 @@ class DoorService
 		return file_put_contents($file, json_encode($history, JSON_PRETTY_PRINT)) !== false;
 	}
 
-	private function get_history_file(string $id): string
-	{
-		return $this->historyDir . '/' . $id . '.json';
-	}
-
-	private function get_doors(): array
+	public function get_doors(): array
 	{
 		if (!file_exists($this->doorsFile)) {
 			return [];
@@ -146,5 +141,10 @@ class DoorService
 	{
 		$data = array_map(fn(Door $d) => $d->toArray(), $doors);
 		return file_put_contents($this->doorsFile, json_encode($data, JSON_PRETTY_PRINT)) !== false;
+	}
+
+	private function get_history_file(string $doorId): string
+	{
+		return $this->historyDir . '/' . $doorId . '.json';
 	}
 }

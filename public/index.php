@@ -105,12 +105,24 @@ $router->map('DELETE', '/api/doors/[*:id]', function ($id) {
 
 // RFID API routes
 
-$router->map('GET', '/api/rfid/scan', function () {
-	require __DIR__ . '/../api/rfid/scan.php';
+// Get all rfid's latest history
+$router->map('GET', '/api/rfids/history/latest', function () {
+	require __DIR__ . '/../api/rfids/get_latest_history.php';
 });
 
-$router->map('GET', '/api/rfid/logs', function () {
-	require __DIR__ . '/../api/rfid/logs.php';
+// Get full history for a specific rfid
+$router->map('GET', '/api/rfids/[*:id]/history', function ($id) {
+	require __DIR__ . '/../api/rfids/get_history.php';
+});
+
+// Add a new history entry for a specific rfid
+$router->map('POST', '/api/rfids/[*:id]/history', function ($id) {
+	require __DIR__ . '/../api/rfids/add_history_entry.php';
+});
+
+// RFID scan
+$router->map('POST', '/api/rfids/scan', function () {
+	require __DIR__ . '/../api/rfids/scan.php';
 });
 
 // Sensor API routes

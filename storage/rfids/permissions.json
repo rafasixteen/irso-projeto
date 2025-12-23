@@ -22,8 +22,8 @@
 		"door_type": "locker_room",
 		"allowed_roles": ["member"],
 		"conditions": {
-			"gender_match": true,
-			"gym_open": true
+			"gym_open": true,
+			"gender_match": true
 		}
 	},
 	{

@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 use App\Doors\DoorService;
 use App\Users\UserService;
-use App\Access\AccessService;
+use App\Rfids\RfidService;
 
 header('Content-Type: application/json');
 
 $body = json_decode(file_get_contents('php://input'), true);
-$rfidTag = $body['tag'] ?? null;
-$doorId = $body['door'] ?? null;
+$rfidTag = $body['rfid_tag'] ?? null;
+$doorId = $body['door_id'] ?? null;
 
 if (empty($rfidTag) || empty($doorId)) {
 	http_response_code(400);
@@ -17,8 +17,8 @@ if (empty($rfidTag) || empty($doorId)) {
 		'error' => [
 			'message' => 'Invalid request format',
 			'expected' => [
-				'tag' => 'TAG',
-				'door' => 'DOOR',
+				'rfid_tag' => 'string',
+				'door_id' => 'string',
 			],
 		],
 	]);
@@ -27,7 +27,7 @@ if (empty($rfidTag) || empty($doorId)) {
 
 $userService = new UserService();
 $doorService = new DoorService();
-$accessService = new AccessService();
+$rfidService = new RfidService();
 
 $user = $userService->get_user_by_rfid($rfidTag);
 
@@ -45,7 +45,7 @@ if (!$door) {
 	exit();
 }
 
-$accessResult = $accessService->checkAccess($user, $door);
+$accessResult = $rfidService->check_access($user, $door);
 
 echo json_encode([
 	'authorized' => $accessResult['authorized'],

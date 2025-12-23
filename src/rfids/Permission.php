@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Access;
+namespace App\Rfids;
 
-final class DoorPermission
+final class Permission
 {
 	/**
 	 * @param string $doorType
