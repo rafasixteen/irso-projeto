@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 header('Content-Type: application/json');
 
+use App\Doors\Door;
 use App\Doors\DoorService;
 
 $body = json_decode(file_get_contents('php://input'), true);
 $id = $body['id'] ?? null;
 $type = $body['type'] ?? null;
+$allowedGender = $body['allowed_gender'] ?? null;
 
 if (empty($id) || empty($type)) {
 	http_response_code(400);
@@ -17,6 +19,7 @@ if (empty($id) || empty($type)) {
 			'expected' => [
 				'id' => 'ID',
 				'type' => 'TYPE',
+				'allowed_gender (optional)' => 'M/F',
 			],
 		],
 	]);
@@ -31,7 +34,8 @@ if ($doorService->exists($id)) {
 	exit();
 }
 
-$success = $doorService->create($id, $type);
+$door = new Door($id, $type, $allowedGender);
+$success = $doorService->create($door);
 
 if ($success) {
 	echo json_encode(['message' => "Door '{$id}' added successfully"]);

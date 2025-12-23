@@ -27,17 +27,15 @@ class DoorService
 		return null;
 	}
 
-	public function create($id, $type): bool
+	public function create(Door $door): bool
 	{
-		$door = new Door($id, $type);
-
 		$doors = $this->load_doors();
 		$doors[] = $door;
 
 		$saved = $this->save_doors($doors);
 
 		if ($saved) {
-			$this->log_history($id, false);
+			$this->log_history($door->id, false);
 		}
 
 		return $saved;

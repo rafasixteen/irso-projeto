@@ -19,5 +19,5 @@ if ($history !== null) {
 	echo json_encode(['history' => $history]);
 } else {
 	http_response_code(500);
-	echo json_encode(['error' => "Failed to retrieve door $id history"]);
+	echo json_encode(['error' => "Failed to retrieve door '{$id}' history"]);
 }
