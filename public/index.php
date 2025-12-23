@@ -68,6 +68,21 @@ $router->map('GET', '/api/users', function () {
 
 // Door API routes
 
+// Get all doors latest history
+$router->map('GET', '/api/doors/history/latest', function () {
+	require __DIR__ . '/../api/doors/get_latest_history.php';
+});
+
+// Get full history for a specific door
+$router->map('GET', '/api/doors/[*:id]/history', function ($id) {
+	require __DIR__ . '/../api/doors/get_history.php';
+});
+
+// Add a new history entry for a specific door
+$router->map('POST', '/api/doors/[*:id]/history', function ($id) {
+	require __DIR__ . '/../api/doors/add_history_entry.php';
+});
+
 // Add a new door
 $router->map('POST', '/api/doors', function () {
 	require __DIR__ . '/../api/doors/add_door.php';

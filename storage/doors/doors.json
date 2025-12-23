@@ -1,32 +1,32 @@
 [
-    {
-        "id": "main_entrance",
-        "type": "public",
-        "allowed_gender": null
-    },
-    {
-        "id": "locker_room_male",
-        "type": "locker_room",
-        "allowed_gender": "M"
-    },
-    {
-        "id": "locker_room_female",
-        "type": "locker_room",
-        "allowed_gender": "F"
-    },
-    {
-        "id": "staff_room",
-        "type": "staff_only",
-        "allowed_gender": null
-    },
-    {
-        "id": "maintenance_room",
-        "type": "maintenance",
-        "allowed_gender": null
-    },
-    {
-        "id": "office",
-        "type": "staff_only",
-        "allowed_gender": null
-    }
+	{
+		"id": "main-entrance",
+		"type": "public",
+		"allowed_gender": null
+	},
+	{
+		"id": "locker-room-male",
+		"type": "locker_room",
+		"allowed_gender": "M"
+	},
+	{
+		"id": "locker-room-female",
+		"type": "locker_room",
+		"allowed_gender": "F"
+	},
+	{
+		"id": "staff-room",
+		"type": "staff_only",
+		"allowed_gender": null
+	},
+	{
+		"id": "maintenance-room",
+		"type": "maintenance",
+		"allowed_gender": null
+	},
+	{
+		"id": "office",
+		"type": "staff_only",
+		"allowed_gender": null
+	}
 ]
