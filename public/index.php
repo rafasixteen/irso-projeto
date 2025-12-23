@@ -38,23 +38,26 @@ $router->map('GET', '/home', function () {
 
 // User API routes
 
-// Create a new user
+// Add a new user
 $router->map('POST', '/api/users', function () {
 	require __DIR__ . '/../api/users/add_user.php';
 });
 
 // Get user by ID
 $router->map('GET', '/api/users/[i:id]', function ($id) {
+	$id = (int) $id;
 	require __DIR__ . '/../api/users/get_user.php';
 });
 
 // Update user by ID
 $router->map('POST', '/api/users/[i:id]', function ($id) {
+	$id = (int) $id;
 	require __DIR__ . '/../api/users/update_user.php';
 });
 
 // Delete user by ID
 $router->map('DELETE', '/api/users/[i:id]', function ($id) {
+	$id = (int) $id;
 	require __DIR__ . '/../api/users/delete_user.php';
 });
 
@@ -65,7 +68,7 @@ $router->map('GET', '/api/users', function () {
 
 // Door API routes
 
-// Create a new door
+// Add a new door
 $router->map('POST', '/api/doors', function () {
 	require __DIR__ . '/../api/doors/add_door.php';
 });

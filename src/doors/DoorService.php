@@ -17,14 +17,14 @@ class DoorService
 
 	public function add_door(Door $door): bool
 	{
-		$doors = $this->load_doors();
+		$doors = $this->get_doors();
 		$doors[] = $door;
 		return $this->save_doors($doors);
 	}
 
 	public function get_door_by_id(string $id): ?Door
 	{
-		foreach ($this->load_doors() as $door) {
+		foreach ($this->get_doors() as $door) {
 			if ($door->id === $id) {
 				return $door;
 			}
@@ -35,7 +35,7 @@ class DoorService
 
 	public function update_door(Door $updatedDoor): bool
 	{
-		$doors = $this->load_doors();
+		$doors = $this->get_doors();
 		$found = false;
 
 		foreach ($doors as &$door) {
@@ -55,7 +55,7 @@ class DoorService
 
 	public function delete_door_by_id(string $id): bool
 	{
-		$doors = $this->load_doors();
+		$doors = $this->get_doors();
 		$filtered = array_filter($doors, fn(Door $d) => $d->id !== $id);
 
 		if (count($doors) === count($filtered)) {
@@ -65,7 +65,7 @@ class DoorService
 		return $this->save_doors(array_values($filtered));
 	}
 
-	private function load_doors(): array
+	private function get_doors(): array
 	{
 		if (!file_exists($this->doorsFile)) {
 			return [];

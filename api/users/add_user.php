@@ -6,17 +6,19 @@ header('Content-Type: application/json');
 use App\Users\UserService;
 
 $body = json_decode(file_get_contents('php://input'), true);
+
 $name = $body['name'] ?? null;
 $role = $body['role'] ?? null;
 $gender = $body['gender'] ?? null;
 
-if (empty($name) || empty($role) || empty($gender) || !in_array($role, ['member', 'janitor', 'admin'], true) || !in_array($gender, ['M', 'F'], true)) {
+if (empty($name) || empty($role) || empty($gender)) {
 	http_response_code(400);
 	echo json_encode([
 		'error' => [
-			'message' => 'Invalid request format',
+			'code' => 'INVALID_REQUEST',
+			'message' => 'Missing required fields: name, role, or gender',
 			'expected' => [
-				'name' => 'NAME',
+				'name' => 'string',
 				'role' => 'member/janitor/admin',
 				'gender' => 'M/F',
 			],
@@ -25,12 +27,40 @@ if (empty($name) || empty($role) || empty($gender) || !in_array($role, ['member'
 	exit();
 }
 
-$userService = new UserService();
-$success = $userService->create($name, $role, $gender);
+if (!in_array($role, ['member', 'janitor', 'admin'], true)) {
+	http_response_code(400);
+	echo json_encode([
+		'error' => [
+			'code' => 'INVALID_REQUEST',
+			'message' => "Invalid role value. Must be 'member', 'janitor', or 'admin'.",
+		],
+	]);
+	exit();
+}
 
-if ($success) {
-	echo json_encode(['message' => "User '{$name}' added successfully"]);
+if (!in_array($gender, ['M', 'F'], true)) {
+	http_response_code(400);
+	echo json_encode([
+		'error' => [
+			'code' => 'INVALID_REQUEST',
+			'message' => "Invalid gender value. Must be 'M' or 'F'.",
+		],
+	]);
+	exit();
+}
+
+$userService = new UserService();
+$user = $userService->add_user($name, $role, $gender);
+
+if ($user !== null) {
+	http_response_code(201);
+	echo json_encode($user);
 } else {
 	http_response_code(500);
-	echo json_encode(['error' => "Failed to add user '{$name}'"]);
+	echo json_encode([
+		'error' => [
+			'code' => 'SERVER_ERROR',
+			'message' => "Failed to add user '{$name}'",
+		],
+	]);
 }

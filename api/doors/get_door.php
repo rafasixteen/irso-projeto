@@ -6,7 +6,6 @@ header('Content-Type: application/json');
 use App\Doors\DoorService;
 
 $doorService = new DoorService();
-
 $door = $doorService->get_door_by_id($id);
 
 if ($door === null) {

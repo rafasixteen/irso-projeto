@@ -3,20 +3,23 @@ declare(strict_types=1);
 
 header('Content-Type: application/json');
 
+use App\Users\User;
 use App\Users\UserService;
 
 $body = json_decode(file_get_contents('php://input'), true);
+
 $name = $body['name'] ?? null;
 $role = $body['role'] ?? null;
 $gender = $body['gender'] ?? null;
 
-if (empty($name) || empty($role) || empty($gender) || !in_array($role, ['member', 'janitor', 'admin'], true) || !in_array($gender, ['M', 'F'], true)) {
+if (empty($name) || empty($role) || empty($gender)) {
 	http_response_code(400);
 	echo json_encode([
 		'error' => [
-			'message' => 'Invalid request format',
+			'code' => 'INVALID_REQUEST',
+			'message' => 'Missing required fields: name, role, or gender',
 			'expected' => [
-				'name' => 'NAME',
+				'name' => 'string',
 				'role' => 'member/janitor/admin',
 				'gender' => 'M/F',
 			],
@@ -25,21 +28,57 @@ if (empty($name) || empty($role) || empty($gender) || !in_array($role, ['member'
 	exit();
 }
 
-$id = (int) $id;
-$userService = new UserService();
-
-if (!$userService->exists($id)) {
-	http_response_code(404);
-	header('Content-Type: application/json');
-	echo json_encode(['error' => 'User not found']);
+if (!in_array($role, ['member', 'janitor', 'admin'], true)) {
+	http_response_code(400);
+	echo json_encode([
+		'error' => [
+			'code' => 'INVALID_REQUEST',
+			'message' => "Invalid role value. Must be 'member', 'janitor', or 'admin'.",
+		],
+	]);
 	exit();
 }
 
-$success = $userService->update($id, $name, $role, $gender);
+if (!in_array($gender, ['M', 'F'], true)) {
+	http_response_code(400);
+	echo json_encode([
+		'error' => [
+			'code' => 'INVALID_REQUEST',
+			'message' => "Invalid gender value. Must be 'M' or 'F'.",
+		],
+	]);
+	exit();
+}
+
+$userService = new UserService();
+$user = $userService->get_user_by_id($id);
+
+if ($user === null) {
+	http_response_code(404);
+	echo json_encode([
+		'error' => [
+			'code' => 'NOT_FOUND',
+			'message' => "User '{$id}' not found",
+		],
+	]);
+	exit();
+}
+
+$user->name = $name;
+$user->role = $role;
+$user->gender = $gender;
+
+$success = $userService->update_user($user);
 
 if ($success) {
-	echo json_encode(['message' => 'User updated successfully']);
+	http_response_code(200);
+	echo json_encode($user);
 } else {
 	http_response_code(500);
-	echo json_encode(['error' => 'Failed to update user']);
+	echo json_encode([
+		'error' => [
+			'code' => 'SERVER_ERROR',
+			'message' => "Failed to update user '{$id}'",
+		],
+	]);
 }

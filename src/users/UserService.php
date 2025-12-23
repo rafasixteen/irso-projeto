@@ -7,7 +7,7 @@ use RuntimeException;
 
 class UserService
 {
-	protected string $storageDir = __DIR__ . '/../../storage/users';
+	protected string $storageDir;
 
 	protected string $storagePath;
 
@@ -15,18 +15,21 @@ class UserService
 
 	public function __construct()
 	{
+		$this->storageDir = __DIR__ . '/../../storage/users';
 		$this->storagePath = $this->storageDir . '/users.json';
 		$this->counterPath = $this->storageDir . '/user_id_counter.txt';
 	}
 
-	public function create(string $name, string $role, string $gender): bool
+	public function add_user(string $name, string $role, string $gender): ?User
 	{
-		$newUserId = $this->generate_incremental_id($this->counterPath);
-		$newUserRfidTag = $this->get_unique_rfid_tag();
-		$newUser = new User($newUserId, $name, $role, $gender, $newUserRfidTag);
+		$id = $this->generate_incremental_id($this->counterPath);
+		$ridTag = $this->get_unique_rfid_tag();
+
+		$user = new User($id, $name, $role, $gender, $ridTag);
 		$users = $this->get_users();
-		array_push($users, $newUser);
-		return $this->save_users($users);
+		$users[] = $user;
+
+		return $this->save_users($users) ? $user : null;
 	}
 
 	public function get_user_by_id(int $id): ?User
@@ -55,41 +58,36 @@ class UserService
 		return null;
 	}
 
-	public function update(int $id, string $newName, string $newRole, string $newGender): bool
+	public function update_user(User $updatedUser): bool
 	{
 		$users = $this->get_users();
+		$found = false;
 
-		foreach ($users as $user) {
-			if ($user->id === $id) {
-				$user->name = $newName;
-				$user->role = $newRole;
-				$user->gender = $newGender;
-
-				return $this->save_users($users);
+		foreach ($users as &$user) {
+			if ($user->id === $updatedUser->id) {
+				$user = $updatedUser;
+				$found = true;
+				break;
 			}
 		}
 
-		return false;
-	}
-
-	public function delete(int $id): bool
-	{
-		$users = $this->get_users();
-		$users = array_filter($users, fn(User $user) => $user->id !== $id);
-		return $this->save_users(array_values($users));
-	}
-
-	public function exists(int $id): bool
-	{
-		$users = $this->get_users();
-
-		foreach ($users as $user) {
-			if ($user->id === $id) {
-				return true;
-			}
+		if (!$found) {
+			return false;
 		}
 
-		return false;
+		return $this->save_users($users);
+	}
+
+	public function delete_user_by_id(int $id): bool
+	{
+		$users = $this->get_users();
+		$filtered = array_filter($users, fn(User $user) => $user->id !== $id);
+
+		if (count($users) === count($filtered)) {
+			return false;
+		}
+
+		return $this->save_users(array_values($filtered));
 	}
 
 	public function get_users(): array
@@ -98,17 +96,14 @@ class UserService
 			return [];
 		}
 
-		$json = file_get_contents($this->storagePath);
-		$data = json_decode($json, true) ?? [];
-
-		return array_map(fn($item) => User::fromArray($item), $data);
+		$data = json_decode(file_get_contents($this->storagePath), true) ?? [];
+		return array_map(fn($d) => User::fromArray($d), $data);
 	}
 
 	private function save_users(array $users): bool
 	{
-		$data = array_map(fn(User $user) => $user->toArray(), $users);
-		$json = json_encode($data, JSON_PRETTY_PRINT);
-		return file_put_contents($this->storagePath, $json) !== false;
+		$data = array_map(fn(User $d) => $d->toArray(), $users);
+		return file_put_contents($this->storagePath, json_encode($data, JSON_PRETTY_PRINT)) !== false;
 	}
 
 	private function get_unique_rfid_tag(): string
