@@ -38,24 +38,29 @@ $router->map('GET', '/home', function () {
 
 // User API routes
 
-$router->map('GET', '/api/users', function () {
-	require __DIR__ . '/../api/user/get_users.php';
-});
-
+// Create a new user
 $router->map('POST', '/api/users', function () {
-	require __DIR__ . '/../api/user/add_user.php';
+	require __DIR__ . '/../api/users/add_user.php';
 });
 
+// Get user by ID
 $router->map('GET', '/api/users/[i:id]', function ($id) {
-	require __DIR__ . '/../api/user/get_user.php';
+	require __DIR__ . '/../api/users/get_user.php';
 });
 
+// Update user by ID
 $router->map('POST', '/api/users/[i:id]', function ($id) {
-	require __DIR__ . '/../api/user/update_user.php';
+	require __DIR__ . '/../api/users/update_user.php';
 });
 
+// Delete user by ID
 $router->map('DELETE', '/api/users/[i:id]', function ($id) {
-	require __DIR__ . '/../api/user/delete_user.php';
+	require __DIR__ . '/../api/users/delete_user.php';
+});
+
+// Get all users
+$router->map('GET', '/api/users', function () {
+	require __DIR__ . '/../api/users/get_users.php';
 });
 
 // Door API routes
