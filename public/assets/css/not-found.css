@@ -1,0 +1,56 @@
+/* Center content */
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	font-family: Arial, sans-serif;
+	background-color: #f5f5f5;
+	color: #333;
+	margin: 0;
+	padding: 20px;
+}
+
+/* Container */
+.not-found-container {
+	text-align: center;
+	background-color: #fff;
+	padding: 40px 30px;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Large 404 number */
+.not-found-container h1 {
+	font-size: 96px;
+	margin-bottom: 20px;
+	color: #007bff;
+}
+
+/* Subtitle */
+.not-found-container h2 {
+	font-size: 24px;
+	margin-bottom: 20px;
+}
+
+/* Paragraph */
+.not-found-container p {
+	margin-bottom: 30px;
+	font-size: 16px;
+}
+
+/* Back button */
+.not-found-container a {
+	display: inline-block;
+	text-decoration: none;
+	background-color: #007bff;
+	color: #fff;
+	padding: 10px 25px;
+	border-radius: 6px;
+	font-weight: bold;
+	transition: background-color 0.2s;
+}
+
+.not-found-container a:hover {
+	background-color: #0056b3;
+}

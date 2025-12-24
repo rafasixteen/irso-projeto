@@ -28,14 +28,6 @@ if (str_starts_with($_SERVER['REQUEST_URI'], '/api')) {
 	}
 }
 
-$router->map('GET', '/', function () {
-	require __DIR__ . '/../public/home/index.php';
-});
-
-$router->map('GET', '/home', function () {
-	require __DIR__ . '/../public/home/index.php';
-});
-
 // User API routes
 
 // Add a new user
@@ -153,10 +145,28 @@ $router->map('POST', '/api/actuator/[a:name]', function ($name) {
 	require __DIR__ . '/../api/actuator/append-value.php';
 });
 
+// Public page routes
+
+$router->map('GET', '/', function () {
+	require __DIR__ . '/home.php';
+});
+
+$router->map('GET', '/[*:page]/[*:id]?', function ($page, $id = null) {
+	$file = __DIR__ . "/../public/{$page}.php";
+
+	if (file_exists($file)) {
+		require $file;
+	} else {
+		header('Location: /not-found');
+		exit();
+	}
+});
+
 $match = $router->match();
 
 if (is_array($match) && is_callable($match['target'])) {
 	call_user_func_array($match['target'], $match['params']);
 } else {
-	http_response_code(404);
+	header('Location: /not-found');
+	exit();
 }
