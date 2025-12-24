@@ -4,7 +4,8 @@
 	"scripts": {
 		"init": "composer install && npm install",
 		"format": "npx prettier --write \"**/*.php\"",
-		"dev": "php -S localhost:8000 -t public"
+		"dev": "php -S localhost:8000 -t public",
+		"tunnel": "npx localtunnel --port 8000"
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.24.0",

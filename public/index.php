@@ -12,12 +12,13 @@ $router = new AltoRouter();
 // Authentication middleware under /api routes
 
 if (str_starts_with($_SERVER['REQUEST_URI'], '/api')) {
-	$headers = getallheaders();
-	$token = $headers['Authorization'] ?? '';
+	$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? (getallheaders()['Authorization'] ?? ''));
 
 	// Expect token in format: Bearer <token>
-	if (str_starts_with($token, 'Bearer ')) {
-		$token = substr($token, 7);
+	if (str_starts_with($authHeader, 'Bearer ')) {
+		$token = substr($authHeader, 7);
+	} else {
+		$token = '';
 	}
 
 	if ($token !== md5('ProjetoIRSO')) {
