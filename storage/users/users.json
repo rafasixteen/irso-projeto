@@ -7,17 +7,24 @@
         "rfidTag": "394a6ee5"
     },
     {
-        "id": 6,
-        "name": "Tiago",
-        "role": "admin",
-        "gender": "M",
-        "rfidTag": "1f8402a6"
-    },
-    {
-        "id": 7,
+        "id": 10,
         "name": "Luana",
         "role": "member",
         "gender": "F",
-        "rfidTag": "2c4af384"
+        "rfidTag": "b061b370"
+    },
+    {
+        "id": 11,
+        "name": "Luana",
+        "role": "admin",
+        "gender": "F",
+        "rfidTag": "3eb71946"
+    },
+    {
+        "id": 13,
+        "name": "Mica",
+        "role": "admin",
+        "gender": "M",
+        "rfidTag": "d4bcf22e"
     }
 ]

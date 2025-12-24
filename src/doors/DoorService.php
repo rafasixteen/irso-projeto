@@ -5,103 +5,129 @@ namespace App\Doors;
 
 class DoorService
 {
-	private string $storageDir = __DIR__ . '/../../storage/doors';
+	private string $storageDir;
 
 	private string $doorsFile;
 
-	private string $historyFile;
+	private string $historyDir;
 
 	public function __construct()
 	{
+		$this->storageDir = __DIR__ . '/../../storage/doors';
 		$this->doorsFile = $this->storageDir . '/doors.json';
-		$this->historyFile = $this->storageDir . '/door_history.json';
+		$this->historyDir = $this->storageDir . '/history';
+	}
+
+	public function add_door(Door $door): bool
+	{
+		$doors = $this->get_doors();
+		$doors[] = $door;
+		return $this->save_doors($doors);
 	}
 
 	public function get_door_by_id(string $id): ?Door
 	{
-		foreach ($this->load_doors() as $door) {
+		foreach ($this->get_doors() as $door) {
 			if ($door->id === $id) {
 				return $door;
 			}
 		}
+
 		return null;
 	}
 
-	public function create(Door $door): bool
+	public function update_door(Door $updatedDoor): bool
 	{
-		$doors = $this->load_doors();
-		$doors[] = $door;
+		$doors = $this->get_doors();
+		$found = false;
 
-		$saved = $this->save_doors($doors);
-
-		if ($saved) {
-			$this->log_history($door->id, false);
+		foreach ($doors as &$door) {
+			if ($door->id === $updatedDoor->id) {
+				$door = $updatedDoor;
+				$found = true;
+				break;
+			}
 		}
 
-		return $saved;
-	}
-
-	public function update_state(string $id, bool $open): bool
-	{
-		$current = $this->is_door_open($id);
-
-		if ($current === $open) {
-			return true;
+		if (!$found) {
+			return false;
 		}
 
-		return $this->log_history($id, $open);
+		return $this->save_doors($doors);
 	}
 
-	public function delete(string $id): bool
+	public function delete_door_by_id(string $id): bool
 	{
-		$doors = $this->load_doors();
+		$doors = $this->get_doors();
 		$filtered = array_filter($doors, fn(Door $d) => $d->id !== $id);
 
 		if (count($doors) === count($filtered)) {
 			return false;
 		}
 
-		if (!$this->save_doors(array_values($filtered))) {
-			return false;
-		}
-
-		return $this->delete_history($id);
+		return $this->save_doors(array_values($filtered));
 	}
 
-	public function exists(string $id): bool
+	public function get_latest_history(): array
 	{
-		foreach ($this->load_doors() as $door) {
-			if ($door->id === $id) {
-				return true;
-			}
+		$doors = $this->get_doors();
+		$result = [];
+
+		foreach ($doors as $door) {
+			$history = $this->get_history($door->id);
+			$latest = end($history) ?: null;
+			$result[] = [
+				'id' => $door->id,
+				'latest' => $latest,
+			];
 		}
-		return false;
+
+		return $result;
 	}
 
-	public function is_door_open(string $id): ?bool
+	public function get_history(string $doorId): array
 	{
-		$history = $this->get_history($id);
+		$file = $this->get_history_file($doorId);
+
+		if (!file_exists($file)) {
+			return [];
+		}
+
+		return json_decode(file_get_contents($file), true) ?? [];
+	}
+
+	public function get_latest_history_entry(string $doorId): ?object
+	{
+		$history = $this->get_history($doorId);
 
 		if (empty($history)) {
 			return null;
 		}
 
-		$latest = end($history);
-		return $latest['open'] ?? null;
+		return (object) end($history);
 	}
 
-	public function get_history(string $doorId): array
+	public function add_history_entry(string $doorId, string $state): bool
 	{
-		if (!file_exists($this->historyFile)) {
-			return [];
+		$file = $this->get_history_file($doorId);
+
+		$dir = dirname($file);
+
+		if (!is_dir($dir)) {
+			mkdir($dir, 0777, true);
 		}
 
-		$logs = json_decode(file_get_contents($this->historyFile), true) ?? [];
+		$history = file_exists($file) ? json_decode(file_get_contents($file), true) ?? [] : [];
 
-		return array_values(array_filter($logs, fn($log) => $log['door'] === $doorId));
+		$history[] = [
+			'timestamp' => date('c'),
+			'state' => $state,
+		];
+
+		return file_put_contents($file, json_encode($history, JSON_PRETTY_PRINT)) !== false;
 	}
 
-	private function load_doors(): array
+	public function get_doors(): array
 	{
 		if (!file_exists($this->doorsFile)) {
 			return [];
@@ -117,32 +143,8 @@ class DoorService
 		return file_put_contents($this->doorsFile, json_encode($data, JSON_PRETTY_PRINT)) !== false;
 	}
 
-	private function log_history(string $doorId, bool $open): bool
+	private function get_history_file(string $doorId): string
 	{
-		$logs = [];
-
-		if (file_exists($this->historyFile)) {
-			$logs = json_decode(file_get_contents($this->historyFile), true) ?? [];
-		}
-
-		$logs[] = [
-			'door' => $doorId,
-			'open' => $open,
-			'timestamp' => gmdate('c'),
-		];
-
-		return file_put_contents($this->historyFile, json_encode($logs, JSON_PRETTY_PRINT)) !== false;
-	}
-
-	private function delete_history(string $doorId): bool
-	{
-		if (!file_exists($this->historyFile)) {
-			return true;
-		}
-
-		$logs = json_decode(file_get_contents($this->historyFile), true) ?? [];
-		$filtered = array_filter($logs, fn($log) => $log['door'] !== $doorId);
-
-		return file_put_contents($this->historyFile, json_encode(array_values($filtered), JSON_PRETTY_PRINT)) !== false;
+		return $this->historyDir . '/' . $doorId . '.json';
 	}
 }

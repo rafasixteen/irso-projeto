@@ -1,0 +1,23 @@
+form label {
+	display: block;
+	margin-bottom: 8px;
+}
+
+form input,
+form button {
+	padding: 8px;
+	margin-bottom: 10px;
+	width: 100%;
+	max-width: 400px;
+}
+
+form button {
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+}
+
+form button:hover {
+	background-color: #0056b3;
+}
