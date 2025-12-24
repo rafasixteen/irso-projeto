@@ -13,7 +13,7 @@ if (empty($styles)) {
 }
 
 // Automatically include navbar CSS
-$navbarCss = '/assets/css/navbar.css';
+$navbarCss = '/assets/css/shared/navbar.css';
 if (!in_array($navbarCss, $styles)) {
 	$styles[] = $navbarCss;
 }

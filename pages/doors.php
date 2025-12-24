@@ -9,6 +9,5 @@
 		</tr>
 	</thead>
 	<tbody>
-		<!-- Doors will be populated by jQuery -->
 	</tbody>
 </table>

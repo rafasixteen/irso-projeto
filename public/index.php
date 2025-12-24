@@ -119,30 +119,30 @@ $router->map('POST', '/api/rfids/scan', function () {
 
 // Sensor API routes
 
-$router->map('GET', '/api/sensor/[a:name]', function ($name) {
-	require __DIR__ . '/../api/sensor/get-history.php';
-});
-
 $router->map('GET', '/api/sensors', function () {
-	require __DIR__ . '/../api/sensor/get-all-names.php';
+	require __DIR__ . '/../api/sensors/get-latest-history.php';
 });
 
-$router->map('POST', '/api/sensor/[a:name]', function ($name) {
-	require __DIR__ . '/../api/sensor/append-value.php';
+$router->map('GET', '/api/sensors/[a:name]', function ($name) {
+	require __DIR__ . '/../api/sensors/get-history.php';
+});
+
+$router->map('POST', '/api/sensors/[a:name]', function ($name) {
+	require __DIR__ . '/../api/sensors/add-history-entry.php';
 });
 
 // Actuator API routes
 
-$router->map('GET', '/api/actuator/[a:name]', function ($name) {
-	require __DIR__ . '/../api/actuator/get-history.php';
-});
-
 $router->map('GET', '/api/actuators', function () {
-	require __DIR__ . '/../api/actuator/get-all-names.php';
+	require __DIR__ . '/../api/actuators/get-latest-history.php';
 });
 
-$router->map('POST', '/api/actuator/[a:name]', function ($name) {
-	require __DIR__ . '/../api/actuator/append-value.php';
+$router->map('GET', '/api/actuators/[a:name]', function ($name) {
+	require __DIR__ . '/../api/actuators/get-history.php';
+});
+
+$router->map('POST', '/api/actuators/[a:name]', function ($name) {
+	require __DIR__ . '/../api/actuators/add-history-entry.php';
 });
 
 // Public page routes
@@ -151,28 +151,56 @@ $router->map('GET', '/', function () {
 	require __DIR__ . '/../public/home.php';
 });
 
-$router->map('GET', '/[*:page]', function ($page) {
-	$file = __DIR__ . "/../public/{$page}.php";
-
-	if (file_exists($file)) {
-		require $file;
-		return;
-	}
-
-	header('Location: /not-found');
-	exit();
+$router->map('GET', '/not-found', function () {
+	require __DIR__ . '/../public/not_found.php';
 });
 
-$router->map('POST', '/[*:page]', function ($page) {
-	$file = __DIR__ . "/../public/{$page}.php";
+$router->map('GET', '/users', function () {
+	require __DIR__ . '/../public/users.php';
+});
 
-	if (file_exists($file)) {
-		require $file;
-		return;
-	}
+$router->map('GET', '/doors', function () {
+	require __DIR__ . '/../public/doors.php';
+});
 
-	header('Location: /not-found');
-	exit();
+$router->map('GET', '/doors/[*:id]', function ($id) {
+	require __DIR__ . '/../public/door-history.php';
+});
+
+$router->map('GET', '/rfid-sensors', function () {
+	require __DIR__ . '/../public/rfid-sensors.php';
+});
+
+$router->map('GET', '/rfid-sensors/[*:id]', function ($id) {
+	require __DIR__ . '/../public/rfid-sensor-history.php';
+});
+
+$router->map('GET', '/sensors', function () {
+	require __DIR__ . '/../public/sensors.php';
+});
+
+$router->map('GET', '/sensors/[*:name]', function ($name) {
+	require __DIR__ . '/../public/sensor-history.php';
+});
+
+$router->map('GET', '/actuators', function () {
+	require __DIR__ . '/../public/actuators.php';
+});
+
+$router->map('GET', '/actuators/[*:name]', function ($name) {
+	require __DIR__ . '/../public/actuator-history.php';
+});
+
+$router->map('GET', '/logout', function () {
+	require __DIR__ . '/../public/logout.php';
+});
+
+$router->map('GET', '/login', function () {
+	require __DIR__ . '/../public/login.php';
+});
+
+$router->map('POST', '/login', function () {
+	require __DIR__ . '/../public/login.php';
 });
 
 $match = $router->match();

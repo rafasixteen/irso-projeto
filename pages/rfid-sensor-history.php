@@ -1,4 +1,4 @@
-<h1>Door History: <?= htmlspecialchars($id, ENT_QUOTES, 'UTF-8') ?></h1>
+<h1>RFID Sensor History: <?= htmlspecialchars($id, ENT_QUOTES, 'UTF-8') ?></h1>
 
 <div id="history-error"></div>
 
@@ -6,7 +6,8 @@
 	<thead>
 		<tr>
 			<th>Timestamp</th>
-			<th>State</th>
+			<th>RFID Tag</th>
+			<th>Message</th>
 		</tr>
 	</thead>
 	<tbody>

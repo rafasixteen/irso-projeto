@@ -18,7 +18,7 @@ function loadDoors() {
                         <td>${formatIsoString(door.latest.timestamp)}</td>
                         <td>${door.latest.state}</td>
 						<td>
-                            <a href="/door-history/${encodeURIComponent(door.id)}">
+                            <a href="/doors/${encodeURIComponent(door.id)}">
                                 View History
                             </a>
                         </td>

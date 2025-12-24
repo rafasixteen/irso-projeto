@@ -1,6 +1,6 @@
 function load(id) {
 	$.ajax({
-		url: `/api/doors/${encodeURIComponent(id)}/history`,
+		url: `/api/rfids/${encodeURIComponent(id)}/history`,
 		method: 'GET',
 		headers: {
 			Authorization: 'Bearer 5b57634f8e96f1c24ae7748f6069e5cf',
@@ -16,32 +16,33 @@ function load(id) {
 				$tbody.append(`
                     <tr>
                         <td>${formatIsoString(entry.timestamp)}</td>
-                        <td>${entry.state}</td>
+                        <td>${entry.rfid_tag}</td>
+                        <td>${entry.message}</td>
                     </tr>
                 `);
 			});
 		},
 		error: function (xhr) {
-			if (window.doorHistoryInterval) {
-				clearInterval(window.doorHistoryInterval);
-				window.doorHistoryInterval = null;
+			if (window.rfidSensorHistoryInterval) {
+				clearInterval(window.rfidSensorHistoryInterval);
+				window.rfidSensorHistoryInterval = null;
 			}
 
 			$('#table').hide();
 
 			if (xhr.status === 404) {
-				$('#history-error').text('Door not found.').show();
+				$('#history-error').text('RFID Sensor not found.').show();
 			} else {
-				$('#history-error').text('Failed to load door history.').show();
+				$('#history-error').text('Failed to load RFID sensor history.').show();
 			}
 
-			console.error(`Failed to load door ${id} history`, xhr);
+			console.error(`Failed to load RFID sensor ${id} history`, xhr);
 		},
 	});
 }
 
 const pathSegments = window.location.pathname.split('/').filter(Boolean);
-const doorId = pathSegments[pathSegments.length - 1];
+const rfidSensorId = pathSegments[pathSegments.length - 1];
 
-window.doorHistoryInterval = setInterval(() => load(doorId), 1000);
-load(doorId);
+window.rfidSensorHistoryInterval = setInterval(() => load(rfidSensorId), 1000);
+load(rfidSensorId);

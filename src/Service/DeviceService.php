@@ -16,32 +16,31 @@ abstract class DeviceService
 		}
 	}
 
-	protected function getFilePath(string $name): string
+	public function get_device_names(): array
 	{
-		return $this->storagePath . '/' . $name . '.json';
+		$files = glob($this->storagePath . '/*.json');
+		return array_map(fn($file) => basename($file, '.json'), $files ?: []);
 	}
 
-	public function getLatestValue(string $name): mixed
+	public function get_latest_history(): array
 	{
-		$file = $this->getFilePath($name);
+		$allNames = $this->get_device_names();
+		$latestHistory = [];
 
-		if (!file_exists($file)) {
-			return null;
+		foreach ($allNames as $name) {
+			$history = $this->get_history($name);
+
+			if (!empty($history)) {
+				$latestHistory[$name] = end($history);
+			}
 		}
 
-		$data = json_decode(file_get_contents($file), true);
-
-		if (empty($data)) {
-			return null;
-		}
-
-		$last = end($data);
-		return $last['value'] ?? null;
+		return $latestHistory;
 	}
 
-	public function getHistory(string $name): array
+	public function get_history(string $deviceName): array
 	{
-		$file = $this->getFilePath($name);
+		$file = $this->get_history_file($deviceName);
 
 		if (!file_exists($file)) {
 			return [];
@@ -50,32 +49,43 @@ abstract class DeviceService
 		return json_decode(file_get_contents($file), true) ?? [];
 	}
 
-	public function appendValue(string $name, mixed $value): bool
+	public function get_latest_history_entry(string $deviceName): ?object
 	{
-		$file = $this->getFilePath($name);
+		$history = $this->get_history($deviceName);
 
-		$history = [];
-
-		if (file_exists($file)) {
-			$history = json_decode(file_get_contents($file), true) ?? [];
+		if (empty($history)) {
+			return null;
 		}
 
+		return (object) end($history);
+	}
+
+	public function add_history_entry(string $deviceName, mixed $value): bool
+	{
+		$file = $this->get_history_file($deviceName);
+
+		$dir = dirname($file);
+
+		if (!is_dir($dir)) {
+			mkdir($dir, 0777, true);
+		}
+
+		$history = file_exists($file) ? json_decode(file_get_contents($file), true) ?? [] : [];
+
 		$history[] = [
-			'timestamp' => gmdate('c'),
+			'timestamp' => date('c'),
 			'value' => $this->normalizeValue($value),
 		];
 
-		return file_put_contents($file, json_encode($history, JSON_PRETTY_PRINT), LOCK_EX) !== false;
+		return file_put_contents($file, json_encode($history, JSON_PRETTY_PRINT)) !== false;
 	}
 
-	public function getAllNames(): array
+	private function get_history_file(string $deviceName): string
 	{
-		$files = glob($this->storagePath . '/*.json');
-
-		return array_map(fn($file) => basename($file, '.json'), $files ?: []);
+		return $this->storagePath . '/' . $deviceName . '.json';
 	}
 
-	protected function normalizeValue(mixed $value): mixed
+	private function normalizeValue(mixed $value): mixed
 	{
 		if ($value === null) {
 			return null;

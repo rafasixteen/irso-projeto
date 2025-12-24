@@ -1,12 +1,12 @@
-<h1>Actuators</h1>
+<h1>Actuator History: <?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?></h1>
+
+<div id="history-error"></div>
 
 <table id="table">
 	<thead>
 		<tr>
-			<th>Name</th>
 			<th>Timestamp</th>
 			<th>Value</th>
-			<th>History</th>
 		</tr>
 	</thead>
 	<tbody>

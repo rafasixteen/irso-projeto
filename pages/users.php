@@ -10,6 +10,5 @@
 		</tr>
 	</thead>
 	<tbody>
-		<!-- Users will be populated by jQuery -->
 	</tbody>
 </table>
