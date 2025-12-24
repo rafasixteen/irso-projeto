@@ -148,18 +148,31 @@ $router->map('POST', '/api/actuator/[a:name]', function ($name) {
 // Public page routes
 
 $router->map('GET', '/', function () {
-	require __DIR__ . '/home.php';
+	require __DIR__ . '/../public/home.php';
 });
 
-$router->map('GET', '/[*:page]/[*:id]?', function ($page, $id = null) {
+$router->map('GET', '/[*:page]', function ($page) {
 	$file = __DIR__ . "/../public/{$page}.php";
 
 	if (file_exists($file)) {
 		require $file;
-	} else {
-		header('Location: /not-found');
-		exit();
+		return;
 	}
+
+	header('Location: /not-found');
+	exit();
+});
+
+$router->map('POST', '/[*:page]', function ($page) {
+	$file = __DIR__ . "/../public/{$page}.php";
+
+	if (file_exists($file)) {
+		require $file;
+		return;
+	}
+
+	header('Location: /not-found');
+	exit();
 });
 
 $match = $router->match();
@@ -167,6 +180,6 @@ $match = $router->match();
 if (is_array($match) && is_callable($match['target'])) {
 	call_user_func_array($match['target'], $match['params']);
 } else {
-	header('Location: /not-found');
+	http_response_code(404);
 	exit();
 }
