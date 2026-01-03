@@ -30,25 +30,22 @@ $doorService = new DoorService();
 $rfidService = new RfidService();
 
 $user = $userService->get_user_by_rfid($rfidTag);
-
-if (!$user) {
-	http_response_code(404);
-	echo json_encode(['authorized' => false, 'message' => 'User not found']);
-	exit();
-}
-
 $door = $doorService->get_door_by_id($doorId);
 
-if (!$door) {
-	http_response_code(404);
-	echo json_encode(['authorized' => false, 'message' => 'Door not found']);
-	exit();
+if ($user === null || $door === null) {
+	echo json_encode([
+		'authorized' => false,
+		'message' => 'Invalid RFID tag or door ID',
+		'rfid_tag' => $rfidTag,
+		'door_id' => $doorId,
+	]);
+} else {
+	$accessResult = $rfidService->check_access($user, $door);
+
+	echo json_encode([
+		'authorized' => $accessResult['authorized'],
+		'message' => $accessResult['reason'],
+		'user' => $user->name,
+		'door_id' => $door->id,
+	]);
 }
-
-$accessResult = $rfidService->check_access($user, $door);
-
-echo json_encode([
-	'authorized' => $accessResult['authorized'],
-	'message' => $accessResult['reason'],
-	'user' => $user->name,
-]);

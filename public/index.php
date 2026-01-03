@@ -11,7 +11,7 @@ $router = new AltoRouter();
 
 // Authentication middleware under /api routes
 
-if (str_starts_with($_SERVER['REQUEST_URI'], '/api')) {
+/*if (str_starts_with($_SERVER['REQUEST_URI'], '/api')) {
 	$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? (getallheaders()['Authorization'] ?? ''));
 
 	// Expect token in format: Bearer <token>
@@ -27,7 +27,7 @@ if (str_starts_with($_SERVER['REQUEST_URI'], '/api')) {
 		echo json_encode(['error' => 'Unauthorized']);
 		exit();
 	}
-}
+}*/
 
 // User API routes
 
