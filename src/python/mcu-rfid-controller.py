@@ -22,10 +22,14 @@ last_cmd_time = 0.0
 
 def set_rfid_valid(pin):
     customWrite(pin, VALID)
+    sleep(1)
+    set_rfid_waiting(pin)
 
 
 def set_rfid_invalid(pin):
     customWrite(pin, INVALID)
+    sleep(1)
+    set_rfid_waiting(pin)
 
 
 def set_rfid_waiting(pin):
@@ -82,7 +86,7 @@ def poll_rfid_commands():
 def setup():
     for pin in RFID_SENSORS.values():
         pinMode(pin, IN)
-        set_rfid_invalid(pin)
+        set_rfid_waiting(pin)
     pinMode(SBC_CMD_PIN, IN)
 
 

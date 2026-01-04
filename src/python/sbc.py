@@ -43,12 +43,6 @@ def detect_card_hover(reader_id, pin):
 
 
 def on_scan_response(status, data):
-
-    # TODO: This error happens because we are sending the card id as a int while the backend expects a string.
-    # TODO: Change the backend to accept an int.
-
-    print(f"Scan response data: '{data}'")
-
     try:
         json_data = json.loads(data)
     except Exception as e:
@@ -60,7 +54,10 @@ def on_scan_response(status, data):
     door_id = json_data.get("door_id")
 
     keyword = "VALID" if authorized else "INVALID"
-    print(f"Scan result for door {door_id}: {keyword}")
+    cmd = f"{keyword}:{door_id}"
+
+    customWrite(MCU_RFID_CMD_PIN, cmd)
+    print(f"Sending command '{cmd}' to MCU")
 
 
 def scan(reader_id: str, card_id: int):

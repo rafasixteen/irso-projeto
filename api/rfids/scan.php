@@ -29,7 +29,7 @@ $userService = new UserService();
 $doorService = new DoorService();
 $rfidService = new RfidService();
 
-$user = $userService->get_user_by_rfid($rfidTag);
+$user = $userService->get_user_by_rfid((string) $rfidTag);
 $door = $doorService->get_door_by_id($doorId);
 
 if ($user === null || $door === null) {
