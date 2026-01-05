@@ -1,3 +1,19 @@
+/* Wrapper */
+.login-container {
+	min-height: 80vh; /* take full viewport height */
+	display: flex;
+	flex-direction: column; /* stack h1, error, form vertically */
+	justify-content: center; /* vertical centering */
+	align-items: center; /* horizontal centering */
+}
+
+/* Optional: limit form width and center its content */
+form {
+	width: 100%;
+	max-width: 400px;
+}
+
+/* Form styles */
 form label {
 	display: block;
 	margin-bottom: 8px;
@@ -8,7 +24,6 @@ form button {
 	padding: 8px;
 	margin-bottom: 10px;
 	width: 100%;
-	max-width: 400px;
 }
 
 form button {
