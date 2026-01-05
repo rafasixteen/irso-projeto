@@ -13,5 +13,20 @@
         "timestamp": "2026-01-05T17:52:09+00:00",
         "rfid_tag": 154,
         "message": "access granted"
+    },
+    {
+        "timestamp": "2026-01-05T22:20:18+00:00",
+        "rfid_tag": 518,
+        "message": "access granted"
+    },
+    {
+        "timestamp": "2026-01-05T22:21:03+00:00",
+        "rfid_tag": 471,
+        "message": "access granted"
+    },
+    {
+        "timestamp": "2026-01-05T22:21:46+00:00",
+        "rfid_tag": 471,
+        "message": "gender mismatch"
     }
 ]

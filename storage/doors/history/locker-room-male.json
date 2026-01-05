@@ -22,5 +22,53 @@
     {
         "timestamp": "2026-01-05T20:51:09+00:00",
         "state": "LOCKED"
+    },
+    {
+        "timestamp": "2026-01-05T22:18:55+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-05T22:18:56+00:00",
+        "state": "LOCKED"
+    },
+    {
+        "timestamp": "2026-01-05T22:20:13+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-05T22:20:14+00:00",
+        "state": "LOCKED"
+    },
+    {
+        "timestamp": "2026-01-05T22:20:29+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-05T22:20:30+00:00",
+        "state": "LOCKED"
+    },
+    {
+        "timestamp": "2026-01-05T22:21:00+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-05T22:21:02+00:00",
+        "state": "LOCKED"
+    },
+    {
+        "timestamp": "2026-01-05T22:21:37+00:00",
+        "state": "UNLOCKED"
+    },
+    {
+        "timestamp": "2026-01-05T22:21:37+00:00",
+        "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-05T22:21:43+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-05T22:21:45+00:00",
+        "state": "LOCKED"
     }
 ]
