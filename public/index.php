@@ -154,11 +154,11 @@ $router->map('GET', '/api/sensors', function () {
 	require __DIR__ . '/../api/sensors/get-latest-history.php';
 });
 
-$router->map('GET', '/api/sensors/[a:name]', function ($name) {
+$router->map('GET', '/api/sensors/[*:name]', function ($name) {
 	require __DIR__ . '/../api/sensors/get-history.php';
 });
 
-$router->map('POST', '/api/sensors/[a:name]', function ($name) {
+$router->map('POST', '/api/sensors/[*:name]', function ($name) {
 	require __DIR__ . '/../api/sensors/add-history-entry.php';
 });
 
@@ -168,11 +168,11 @@ $router->map('GET', '/api/actuators', function () {
 	require __DIR__ . '/../api/actuators/get-latest-history.php';
 });
 
-$router->map('GET', '/api/actuators/[a:name]', function ($name) {
+$router->map('GET', '/api/actuators/[*:name]', function ($name) {
 	require __DIR__ . '/../api/actuators/get-history.php';
 });
 
-$router->map('POST', '/api/actuators/[a:name]', function ($name) {
+$router->map('POST', '/api/actuators/[*:name]', function ($name) {
 	require __DIR__ . '/../api/actuators/add-history-entry.php';
 });
 
