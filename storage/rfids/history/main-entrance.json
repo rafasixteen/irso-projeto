@@ -3,5 +3,20 @@
         "timestamp": "2026-01-05T17:51:33+00:00",
         "rfid_tag": 154,
         "message": "access granted"
+    },
+    {
+        "timestamp": "2026-01-05T20:52:28+00:00",
+        "rfid_tag": 154,
+        "message": "access granted"
+    },
+    {
+        "timestamp": "2026-01-05T20:52:45+00:00",
+        "rfid_tag": 154,
+        "message": "access granted"
+    },
+    {
+        "timestamp": "2026-01-05T21:14:11+00:00",
+        "rfid_tag": 154,
+        "message": "access granted"
     }
 ]
