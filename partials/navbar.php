@@ -2,6 +2,7 @@
 $links = [
 	'/' => 'Home',
 	'/users' => 'Users',
+	'/camera' => 'Camera',
 	'/doors' => 'Doors',
 	'/rfid-sensors' => 'RFID Sensors',
 	'/sensors' => 'Sensors',

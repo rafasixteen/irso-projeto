@@ -13,14 +13,25 @@ URL = f"{PROTOCOL}://{DOMAIN}"
 TOKEN = "Bearer 5b57634f8e96f1c24ae7748f6069e5cf"
 API_URL = f"{URL}/api/camera"
 
-# Desired capture resolution
 FRAME_WIDTH = 1280
 FRAME_HEIGHT = 720
+INTERVAL = 2  # seconds between captures
+PING_INTERVAL = 2  # seconds between server pings
+MAX_RETRIES = 10  # maximum number of server ping retries at startup
 
 
 # -------------------------
 # FUNCTIONS
 # -------------------------
+def is_server_alive():
+    """Ping the server and return True if it responds."""
+    try:
+        response = requests.get(URL, timeout=3)
+        return response.status_code < 500
+    except requests.RequestException:
+        return False
+
+
 def find_camera(max_index=4):
     """Automatically detect the first available camera."""
     for i in range(max_index):
@@ -34,17 +45,13 @@ def find_camera(max_index=4):
 
 def capture_frame(cap):
     """Capture a single frame from the camera with warm-up."""
-    # Set resolution
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
 
-    # Warm up
-    time.sleep(2)
-
     ret, frame = cap.read()
-    cap.release()
     if not ret:
-        sys.exit("Failed to capture image from webcam. Exiting.")
+        print("Failed to capture image from webcam.")
+        return None
     return frame
 
 
@@ -52,7 +59,8 @@ def encode_image(frame):
     """Encode frame to JPEG in memory."""
     ret, buffer = cv2.imencode(".jpg", frame)
     if not ret:
-        sys.exit("Failed to encode image. Exiting.")
+        print("Failed to encode image.")
+        return None
     return buffer.tobytes()
 
 
@@ -75,18 +83,39 @@ def send_to_api(image_bytes):
 
 
 # -------------------------
-# MAIN
+# MAIN LOOP
 # -------------------------
 def main():
-    print(f"Using API URL: {API_URL}")
+    print(f"Waiting for server at {URL}...")
+
+    retries = 0
+    while not is_server_alive():
+        retries += 1
+        print(f"Server not responding. Retry {retries}/{MAX_RETRIES}...")
+        if retries >= MAX_RETRIES:
+            sys.exit("Max retries reached. Server is offline. Exiting.")
+        time.sleep(PING_INTERVAL)
+
+    print("Server is online. Starting camera uploader.")
 
     camera_index, cap = find_camera()
     if camera_index is None:
-        sys.exit("No camera detected on any index. Exiting.")
+        sys.exit("No camera detected. Exiting.")
 
-    frame = capture_frame(cap)
-    image_bytes = encode_image(frame)
-    send_to_api(image_bytes)
+    while True:
+        if not is_server_alive():
+            print("Server went offline. Stopping camera uploader.")
+            break
+
+        frame = capture_frame(cap)
+        if frame is not None:
+            image_bytes = encode_image(frame)
+            if image_bytes is not None:
+                send_to_api(image_bytes)
+
+        time.sleep(INTERVAL)
+
+    cap.release()
 
 
 if __name__ == "__main__":

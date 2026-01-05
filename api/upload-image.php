@@ -1,6 +1,6 @@
 <?php
 
-$UPLOAD_DIR = __DIR__ . '/../storage/uploads';
+$UPLOAD_DIR = __DIR__ . '/../public/assets/images';
 
 // Ensure upload directory exists
 if (!is_dir($UPLOAD_DIR)) {

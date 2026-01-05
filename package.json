@@ -4,11 +4,14 @@
 	"scripts": {
 		"init": "composer install && npm install",
 		"format": "npx prettier --write \"**/*.php\"",
-		"dev": "php -S localhost:8000 -t public",
+		"dev": "concurrently \"npm:serve\" \"npm:camera\"",
+		"serve": "php -S localhost:8000 -t public",
+		"camera": "python src/python/camera.py",
 		"tunnel": "npx localtunnel --port 8000"
 	},
 	"devDependencies": {
 		"@prettier/plugin-php": "^0.24.0",
-		"prettier": "^3.7.4"
+		"prettier": "^3.7.4",
+		"concurrently": "^8.2.0"
 	}
 }

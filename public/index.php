@@ -222,6 +222,10 @@ $router->map('GET', '/actuators/[*:name]', function ($name) {
 	require __DIR__ . '/../public/actuator-history.php';
 });
 
+$router->map('GET', '/camera', function () {
+	require __DIR__ . '/../public/camera.php';
+});
+
 $router->map('GET', '/logout', function () {
 	require __DIR__ . '/../public/logout.php';
 });
