@@ -11,27 +11,39 @@ $router = new AltoRouter();
 
 // Authentication middleware under /api routes
 
+function getBearerToken(): string
+{
+	// 1. Authorization header
+	$header = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? (getallheaders()['Authorization'] ?? ''));
+
+	if (str_starts_with($header, 'Bearer ')) {
+		return substr($header, 7);
+	}
+
+	// 2. Body
+	$rawBody = file_get_contents('php://input');
+
+	// JSON body
+	$json = json_decode($rawBody, true);
+	if (json_last_error() === JSON_ERROR_NONE && isset($json['token'])) {
+		return trim(str_replace('Bearer ', '', $json['token']));
+	}
+
+	// Multipart / raw form-data
+	if (preg_match('/name="token"\s+([^\r\n]+)/', $rawBody, $matches)) {
+		return trim(str_replace('Bearer ', '', $matches[1]));
+	}
+
+	// Standard POST
+	if (isset($_POST['token'])) {
+		return trim(str_replace('Bearer ', '', $_POST['token']));
+	}
+
+	return '';
+}
+
 if (str_starts_with($_SERVER['REQUEST_URI'], '/api')) {
-	$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? (getallheaders()['Authorization'] ?? ''));
-
-	// Expect token in format: Bearer <token>
-	if (str_starts_with($authHeader, 'Bearer ')) {
-		$token = substr($authHeader, 7);
-	} else {
-		$token = '';
-	}
-
-	// If no token in header, try body (JSON or form-data)
-	if ($token === '') {
-		$rawBody = file_get_contents('php://input');
-		$body = json_decode($rawBody, true);
-
-		if (json_last_error() === JSON_ERROR_NONE && isset($body['token'])) {
-			$token = $body['token'];
-		} elseif (isset($_POST['token'])) {
-			$token = $_POST['token'];
-		}
-	}
+	$token = getBearerToken();
 
 	if ($token !== md5('ProjetoIRSO')) {
 		http_response_code(401);
