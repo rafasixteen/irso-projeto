@@ -11,7 +11,7 @@ $router = new AltoRouter();
 
 // Authentication middleware under /api routes
 
-/*if (str_starts_with($_SERVER['REQUEST_URI'], '/api')) {
+if (str_starts_with($_SERVER['REQUEST_URI'], '/api')) {
 	$authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? ($_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? (getallheaders()['Authorization'] ?? ''));
 
 	// Expect token in format: Bearer <token>
@@ -21,13 +21,25 @@ $router = new AltoRouter();
 		$token = '';
 	}
 
+	// If no token in header, try body (JSON or form-data)
+	if ($token === '') {
+		$rawBody = file_get_contents('php://input');
+		$body = json_decode($rawBody, true);
+
+		if (json_last_error() === JSON_ERROR_NONE && isset($body['token'])) {
+			$token = $body['token'];
+		} elseif (isset($_POST['token'])) {
+			$token = $_POST['token'];
+		}
+	}
+
 	if ($token !== md5('ProjetoIRSO')) {
 		http_response_code(401);
 		header('Content-Type: application/json');
 		echo json_encode(['error' => 'Unauthorized']);
 		exit();
 	}
-}*/
+}
 
 // User API routes
 
