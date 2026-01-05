@@ -1,47 +1,7 @@
 [
     {
-        "timestamp": "2025-12-24T14:46:52+00:00",
-        "rfid_tag": "3eb71946",
-        "message": "gym closed"
-    },
-    {
-        "timestamp": "2026-01-04T23:00:49+00:00",
-        "rfid_tag": "3eb71946",
-        "message": "gym closed"
-    },
-    {
-        "timestamp": "2026-01-04T23:39:14+00:00",
-        "rfid_tag": "1000",
-        "message": "access granted"
-    },
-    {
-        "timestamp": "2026-01-04T23:39:57+00:00",
-        "rfid_tag": "1001",
-        "message": "access granted"
-    },
-    {
-        "timestamp": "2026-01-04T23:47:24+00:00",
-        "rfid_tag": "1000",
-        "message": "access granted"
-    },
-    {
-        "timestamp": "2026-01-04T23:51:30+00:00",
-        "rfid_tag": "1000",
-        "message": "access granted"
-    },
-    {
-        "timestamp": "2026-01-04T23:58:22+00:00",
-        "rfid_tag": "1000",
-        "message": "access granted"
-    },
-    {
-        "timestamp": "2026-01-04T23:59:14+00:00",
-        "rfid_tag": "1000",
-        "message": "access granted"
-    },
-    {
-        "timestamp": "2026-01-04T23:59:22+00:00",
-        "rfid_tag": "1001",
+        "timestamp": "2026-01-05T17:51:33+00:00",
+        "rfid_tag": 154,
         "message": "access granted"
     }
 ]

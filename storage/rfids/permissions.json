@@ -4,11 +4,7 @@
 		"allowed_roles": ["admin", "janitor"]
 	},
 	{
-		"door_type": "locker_room",
-		"allowed_roles": ["admin", "janitor"]
-	},
-	{
-		"door_type": "maintenance",
+		"door_type": "locker-room",
 		"allowed_roles": ["admin", "janitor"]
 	},
 	{
@@ -19,7 +15,7 @@
 		}
 	},
 	{
-		"door_type": "locker_room",
+		"door_type": "locker-room",
 		"allowed_roles": ["member"],
 		"conditions": {
 			"gym_open": true,
@@ -27,7 +23,7 @@
 		}
 	},
 	{
-		"door_type": "staff_only",
+		"door_type": "staff-only",
 		"allowed_roles": ["admin"],
 		"conditions": {
 			"gym_open": true

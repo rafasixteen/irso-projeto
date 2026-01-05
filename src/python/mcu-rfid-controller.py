@@ -2,7 +2,12 @@ from gpio import *
 from time import *
 
 # Mapping: id -> pin (D1 pins for RFID lights)
-RFID_SENSORS = {"main-entrance": 1, "Lab": 2, "Office": 3, "Lockers": 4}
+RFID_SENSORS = {
+    "main-entrance": 1,
+    "office": 2,
+    "locker-room-male": 4,
+    "locker-room-female": 3,
+}
 
 # Command from SBC
 SBC_CMD_PIN = 0
@@ -53,7 +58,8 @@ def poll_rfid_commands():
     reader_id = cmd.split(":")[1]
 
     if reader_id not in RFID_SENSORS.keys():
-        print("Unknown reader ID in command:", reader_id)
+        print(f"Unknown reader ID in command: {cmd}")
+        return
 
     pin = RFID_SENSORS[reader_id]
     print(f"Processing command '{cmd}' for reader '{reader_id}' on pin {pin}")

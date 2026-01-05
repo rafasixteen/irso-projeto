@@ -20,7 +20,21 @@ if (empty($id) || empty($type)) {
 			'expected' => [
 				'id' => 'string',
 				'type' => 'string',
-				'allowed_gender (optional)' => 'M/F',
+				'allowed-gender (optional)' => 'M/F',
+			],
+		],
+	]);
+	exit();
+}
+
+if (!in_array($type, ['public', 'locker-room', 'staff-only'], true)) {
+	http_response_code(400);
+	echo json_encode([
+		'error' => [
+			'code' => 'INVALID_REQUEST',
+			'message' => "Invalid type value. Must be 'public', 'locker-room', or 'staff-only'.",
+			'expected' => [
+				'type' => "'public', 'locker-room', or 'staff-only'",
 			],
 		],
 	]);

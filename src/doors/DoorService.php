@@ -139,6 +139,10 @@ class DoorService
 
 	private function save_doors(array $doors): bool
 	{
+		if (!is_dir($this->storageDir)) {
+			mkdir($this->storageDir, 0777, true);
+		}
+
 		$data = array_map(fn(Door $d) => $d->toArray(), $doors);
 		return file_put_contents($this->doorsFile, json_encode($data, JSON_PRETTY_PRINT)) !== false;
 	}

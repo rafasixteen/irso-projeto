@@ -97,7 +97,7 @@ class RfidService
 		return (object) end($history);
 	}
 
-	public function add_history_entry(string $doorId, string $rfidTag, string $message): bool
+	public function add_history_entry(string $doorId, int $rfidTag, string $message): bool
 	{
 		$file = $this->get_history_file($doorId);
 

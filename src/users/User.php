@@ -13,9 +13,9 @@ class User
 
 	public string $gender;
 
-	public string $rfidTag;
+	public int $rfidTag;
 
-	public function __construct(int $id, string $name, string $role, string $gender, string $rfidTag)
+	public function __construct(int $id, string $name, string $role, string $gender, int $rfidTag)
 	{
 		$this->id = $id;
 		$this->name = $name;

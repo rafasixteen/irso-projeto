@@ -1,7 +1,17 @@
 [
     {
-        "timestamp": "2025-12-24T14:40:45+00:00",
-        "rfid_tag": "3eb71946",
-        "message": "granted"
+        "timestamp": "2026-01-05T17:51:54+00:00",
+        "rfid_tag": 518,
+        "message": "access granted"
+    },
+    {
+        "timestamp": "2026-01-05T17:52:02+00:00",
+        "rfid_tag": 154,
+        "message": "access granted"
+    },
+    {
+        "timestamp": "2026-01-05T17:52:09+00:00",
+        "rfid_tag": 154,
+        "message": "access granted"
     }
 ]

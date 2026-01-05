@@ -6,27 +6,17 @@
 	},
 	{
 		"id": "locker-room-male",
-		"type": "locker_room",
+		"type": "locker-room",
 		"allowed_gender": "M"
 	},
 	{
 		"id": "locker-room-female",
-		"type": "locker_room",
+		"type": "locker-room",
 		"allowed_gender": "F"
 	},
 	{
-		"id": "staff-room",
-		"type": "staff_only",
-		"allowed_gender": null
-	},
-	{
-		"id": "maintenance-room",
-		"type": "maintenance",
-		"allowed_gender": null
-	},
-	{
 		"id": "office",
-		"type": "staff_only",
+		"type": "staff-only",
 		"allowed_gender": null
 	}
 ]

@@ -25,28 +25,59 @@ if (empty($rfidTag) || empty($doorId)) {
 	exit();
 }
 
+if (!is_int($rfidTag)) {
+	http_response_code(400);
+	echo json_encode([
+		'error' => [
+			'message' => 'RFID tag must be an integer',
+		],
+	]);
+	exit();
+}
+
 $userService = new UserService();
 $doorService = new DoorService();
 $rfidService = new RfidService();
 
-$user = $userService->get_user_by_rfid((string) $rfidTag);
+$user = $userService->get_user_by_rfid($rfidTag);
 $door = $doorService->get_door_by_id($doorId);
 
-if ($user === null || $door === null) {
+if ($user === null && $door === null) {
 	echo json_encode([
 		'authorized' => false,
-		'message' => 'Invalid RFID tag or door ID',
+		'message' => 'Unrecognized RFID tag and invalid door ID',
 		'rfid_tag' => $rfidTag,
 		'door_id' => $doorId,
 	]);
-} else {
-	$accessResult = $rfidService->check_access($user, $door);
-
-	echo json_encode([
-		'authorized' => $accessResult['authorized'],
-		'message' => $accessResult['reason'],
-		'user' => $user->name,
-		'door_id' => $door->id,
-		'rfid_tag' => $rfidTag,
-	]);
+	exit();
 }
+
+if ($user === null) {
+	echo json_encode([
+		'authorized' => false,
+		'message' => 'Unrecognized RFID tag',
+		'rfid_tag' => $rfidTag,
+		'door_id' => $doorId,
+	]);
+	exit();
+}
+
+if ($door === null) {
+	echo json_encode([
+		'authorized' => false,
+		'message' => 'Invalid door ID',
+		'rfid_tag' => $rfidTag,
+		'door_id' => $doorId,
+	]);
+	exit();
+}
+
+$accessResult = $rfidService->check_access($user, $door);
+
+echo json_encode([
+	'authorized' => $accessResult['authorized'],
+	'message' => $accessResult['reason'],
+	'user' => $user->name,
+	'door_id' => $door->id,
+	'rfid_tag' => $rfidTag,
+]);

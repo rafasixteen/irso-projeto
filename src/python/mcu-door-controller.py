@@ -8,11 +8,17 @@ from realhttp import *
 PROTOCOL = "http"
 DOMAIN = "localhost:8000"
 URL = f"{PROTOCOL}://{DOMAIN}"
+TOKEN = "Bearer 5b57634f8e96f1c24ae7748f6069e5cf"
 
 http = RealHTTPClient()
 
 # Mapping: id -> pin
-DOOR_PINS = {"main-entrance": 1, "Lab": 2, "Office": 3, "Lockers": 4}
+DOOR_PINS = {
+    "main-entrance": 2,
+    "office": 1,
+    "locker-room-male": 3,
+    "locker-room-female": 4,
+}
 
 # Command from SBC
 SBC_CMD_PIN = 0
@@ -58,7 +64,7 @@ def get_door_state(door_name):
 
 def update_door_history(door_id, action):
     url = f"{URL}/api/doors/{door_id}/history"
-    body = json.dumps({"state": action})
+    body = json.dumps({"token": TOKEN, "state": action})
 
     http.onDone(lambda status, data: None)
     http.post(url, body)

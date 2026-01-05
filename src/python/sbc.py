@@ -8,6 +8,7 @@ import json
 PROTOCOL = "http"
 DOMAIN = "localhost:8000"
 URL = f"{PROTOCOL}://{DOMAIN}"
+TOKEN = "Bearer 5b57634f8e96f1c24ae7748f6069e5cf"
 
 http = RealHTTPClient()
 
@@ -19,7 +20,12 @@ MCU_DOOR_CMD_PIN = 0
 last_scan_time = {}
 
 # Mapping: id -> pin (D1 pins for RFID lights)
-RFID_SENSORS = {"main-entrance": 2, "Lab": 3, "Office": 4, "Lockers": 5}
+RFID_SENSORS = {
+    "main-entrance": 2,
+    "office": 3,
+    "locker-room-male": 4,
+    "locker-room-female": 5,
+}
 
 # Track last seen card per reader ID
 last_seen = {reader_id: 0 for reader_id in RFID_SENSORS.keys()}
@@ -44,20 +50,32 @@ def detect_card_hover(reader_id, pin):
         last_seen[reader_id] = card_id
 
         # Scan the card
-        scan(reader_id, str(card_id))
+        scan(reader_id, card_id)
 
 
 def on_scan_response(status, data):
     global pending_rfid_cmd, pending_door_cmd
 
+    if status == 504:
+        print("Received 504 Gateway Timeout from the server")
+        return
+
     try:
         json_data = json.loads(data)
     except Exception as e:
-        print(f"Scan request failed with status {status}")
-        print(e)
+        print("Failed to parse JSON from scan response")
+        print(f"Error: {e}")
+        print(f"Raw response data: '{data}'")
         return
 
-    # print(json.dumps(json_data, indent=4))
+    if status != 200:
+        print(f"Scan request failed with status {status}")
+        print("Response data:")
+        print(json.dumps(json_data, indent=4))
+        return
+
+    print("Scan response JSON:")
+    print(json.dumps(json_data, indent=4))
 
     authorized = json_data.get("authorized")
     message = json_data.get("message")
@@ -73,9 +91,9 @@ def on_scan_response(status, data):
     update_rfid_history(door_id, rfid_tag, message)
 
 
-def scan(reader_id: str, card_id: str):
+def scan(reader_id: str, card_id: int):
     url = f"{URL}/api/rfids/scan"
-    body = json.dumps({"rfid_tag": card_id, "door_id": reader_id})
+    body = json.dumps({"token": TOKEN, "rfid_tag": card_id, "door_id": reader_id})
 
     http.onDone(on_scan_response)
     http.post(url, body)
@@ -86,7 +104,7 @@ def scan(reader_id: str, card_id: str):
 
 def update_rfid_history(door_id, card_id, message):
     url = f"{URL}/api/rfids/{door_id}/history"
-    body = json.dumps({"rfid_tag": card_id, "message": message})
+    body = json.dumps({"token": TOKEN, "rfid_tag": card_id, "message": message})
 
     http.onDone(lambda status, data: None)
     http.post(url, body)

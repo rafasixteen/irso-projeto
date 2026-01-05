@@ -23,9 +23,9 @@ class UserService
 	public function add_user(string $name, string $role, string $gender): ?User
 	{
 		$id = $this->generate_incremental_id($this->counterPath);
-		$ridTag = $this->get_unique_rfid_tag();
+		$rfidTag = $this->get_unique_rfid_tag();
 
-		$user = new User($id, $name, $role, $gender, $ridTag);
+		$user = new User($id, $name, $role, $gender, $rfidTag);
 		$users = $this->get_users();
 		$users[] = $user;
 
@@ -45,7 +45,7 @@ class UserService
 		return null;
 	}
 
-	public function get_user_by_rfid(string $rfidTag): ?User
+	public function get_user_by_rfid(int $rfidTag): ?User
 	{
 		$users = $this->get_users();
 
@@ -106,28 +106,19 @@ class UserService
 		return file_put_contents($this->storagePath, json_encode($data, JSON_PRETTY_PRINT)) !== false;
 	}
 
-	private function get_unique_rfid_tag(): string
+	private function get_unique_rfid_tag(): int
 	{
-		$users = $this->get_users();
+		$used = array_map(fn(User $u) => $u->rfidTag, $this->get_users());
+
+		if (count($used) >= 1000) {
+			throw new RuntimeException('No available RFID tags (1 to 1000 exhausted)');
+		}
 
 		do {
-			$tag = $this->random_rfid_tag();
-			$isUnique = true;
-
-			foreach ($users as $user) {
-				if ($user->rfidTag === $tag) {
-					$isUnique = false;
-					break;
-				}
-			}
-		} while (!$isUnique);
+			$tag = random_int(1, 1000);
+		} while (in_array($tag, $used, true));
 
 		return $tag;
-	}
-
-	private function random_rfid_tag(): string
-	{
-		return bin2hex(random_bytes(4));
 	}
 
 	function generate_incremental_id(string $path): int

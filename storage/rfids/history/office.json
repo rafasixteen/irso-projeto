@@ -1,0 +1,12 @@
+[
+    {
+        "timestamp": "2026-01-05T17:51:43+00:00",
+        "rfid_tag": 518,
+        "message": "no permission matched"
+    },
+    {
+        "timestamp": "2026-01-05T17:52:17+00:00",
+        "rfid_tag": 154,
+        "message": "access granted"
+    }
+]
