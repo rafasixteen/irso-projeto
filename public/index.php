@@ -53,6 +53,12 @@ if (str_starts_with($_SERVER['REQUEST_URI'], '/api')) {
 	}
 }
 
+// Camera image upload route
+
+$router->map('POST', '/api/camera', function () {
+	require __DIR__ . '/../api/upload-image.php';
+});
+
 // User API routes
 
 // Add a new user
