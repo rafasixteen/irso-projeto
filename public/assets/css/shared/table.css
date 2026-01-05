@@ -1,7 +1,14 @@
+/* Wrapper to make table scrollable vertically */
+.table-wrapper {
+	max-height: 80vh; /* adjust height as needed */
+	overflow-y: auto;
+	border: 1px solid #ccc; /* optional border around scroll area */
+}
+
+/* Table styling */
 table {
 	width: 100%;
 	border-collapse: collapse;
-	margin-bottom: 20px;
 	background-color: #fff;
 }
 
@@ -14,4 +21,7 @@ table td {
 
 table th {
 	background-color: #eee;
+	position: sticky; /* keeps headers visible while scrolling */
+	top: 0;
+	z-index: 1;
 }

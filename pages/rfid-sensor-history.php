@@ -2,14 +2,16 @@
 
 <div id="history-error"></div>
 
-<table id="table">
-	<thead>
-		<tr>
-			<th>Timestamp</th>
-			<th>RFID Tag</th>
-			<th>Message</th>
-		</tr>
-	</thead>
-	<tbody>
-	</tbody>
-</table>
+<div class="table-wrapper">
+	<table id="table">
+		<thead>
+			<tr>
+				<th>Timestamp</th>
+				<th>RFID Tag</th>
+				<th>Message</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
