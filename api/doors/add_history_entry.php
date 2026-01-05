@@ -22,14 +22,14 @@ if (empty($state)) {
 	exit();
 }
 
-if ($state !== null && !in_array($state, ['OPEN', 'CLOSED'], true)) {
+if ($state !== null && !in_array($state, ['OPEN', 'CLOSED', 'LOCKED', 'UNLOCKED'], true)) {
 	http_response_code(400);
 	echo json_encode([
 		'error' => [
 			'code' => 'INVALID_REQUEST',
-			'message' => "Invalid state value. Must be 'OPEN' or 'CLOSED'.",
+			'message' => "Invalid state value. Must be 'OPEN', 'CLOSED', 'LOCKED', or 'UNLOCKED'.",
 			'expected' => [
-				'state' => 'OPEN/CLOSED',
+				'state' => 'OPEN/CLOSED/LOCKED/UNLOCKED',
 			],
 		],
 	]);

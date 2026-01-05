@@ -22,5 +22,105 @@
     {
         "timestamp": "2025-12-24T02:27:04+00:00",
         "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-04T23:44:51+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-04T23:47:24+00:00",
+        "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-04T23:47:24+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-04T23:51:30+00:00",
+        "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-04T23:51:30+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-04T23:51:31+00:00",
+        "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-04T23:51:37+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-04T23:53:03+00:00",
+        "state": "LOCKED"
+    },
+    {
+        "timestamp": "2026-01-04T23:58:22+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-04T23:58:22+00:00",
+        "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-04T23:58:23+00:00",
+        "state": "UNLOCKED"
+    },
+    {
+        "timestamp": "2026-01-04T23:58:25+00:00",
+        "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-04T23:58:31+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-04T23:58:33+00:00",
+        "state": "LOCKED"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:14+00:00",
+        "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:14+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:16+00:00",
+        "state": "UNLOCKED"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:16+00:00",
+        "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:22+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:22+00:00",
+        "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:23+00:00",
+        "state": "LOCKED"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:23+00:00",
+        "state": "UNLOCKED"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:24+00:00",
+        "state": "OPEN"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:29+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-04T23:59:31+00:00",
+        "state": "LOCKED"
     }
 ]

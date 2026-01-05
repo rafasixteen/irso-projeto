@@ -47,5 +47,6 @@ if ($user === null || $door === null) {
 		'message' => $accessResult['reason'],
 		'user' => $user->name,
 		'door_id' => $door->id,
+		'rfid_tag' => $rfidTag,
 	]);
 }

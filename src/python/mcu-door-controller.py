@@ -1,8 +1,18 @@
+import json
 from gpio import *
 from time import *
+from realhttp import *
 
-# Door inputs
-DOOR_PINS = [1, 2, 3, 4]
+# API Configuration
+
+PROTOCOL = "http"
+DOMAIN = "localhost:8000"
+URL = f"{PROTOCOL}://{DOMAIN}"
+
+http = RealHTTPClient()
+
+# Mapping: id -> pin
+DOOR_PINS = {"main-entrance": 1, "Lab": 2, "Office": 3, "Lockers": 4}
 
 # Command from SBC
 SBC_CMD_PIN = 0
@@ -15,16 +25,17 @@ LOCK = 1
 
 # Core functions
 
-def set_door_state(pin, door_state, lock_state):
+
+def set_door_state(door_name, door_state, lock_state):
     # 1. Validate values
     if door_state not in (OPEN, CLOSE):
         raise ValueError("Invalid door_state")
-	
+
     if lock_state not in (LOCK, UNLOCK):
         raise ValueError("Invalid lock_state")
 
     # 2. Read current state
-    current_door_state, current_lock_state = get_door_state(pin)
+    current_door_state, current_lock_state = get_door_state(door_name)
 
     # 3. No-op optimization
     if door_state == current_door_state and lock_state == current_lock_state:
@@ -32,80 +43,113 @@ def set_door_state(pin, door_state, lock_state):
 
     # 4. Apply change
     cmd = f"{door_state},{lock_state}"
-    customWrite(pin, cmd)
+    customWrite(DOOR_PINS[door_name], cmd)
 
-    # 5. Update software state
-    update_door_state(pin, door_state, lock_state)
 
-def get_door_state(pin):
-	state = customRead(pin)
-	door_state, lock_state = map(int, state.split(","))
-	return door_state, lock_state
+def get_door_state(door_name):
+    pin = DOOR_PINS[door_name]
+    state = customRead(pin)
+    door_state, lock_state = map(int, state.split(","))
+    return door_state, lock_state
+
 
 # Convenience functions
 
-def open_door(pin):
-    _, lock = get_door_state(pin)
-    set_door_state(pin, OPEN, lock)
 
-def close_door(pin):
-    _, lock = get_door_state(pin)
-    set_door_state(pin, CLOSE, lock)
+def update_door_history(door_id, action):
+    url = f"{URL}/api/doors/{door_id}/history"
+    body = json.dumps({"state": action})
 
-def unlock_door(pin):
-    door, _ = get_door_state(pin)
-    set_door_state(pin, door, UNLOCK)
+    http.onDone(lambda status, data: None)
+    http.post(url, body)
 
-def lock_door(pin):
-    door, _ = get_door_state(pin)
-    set_door_state(pin, door, LOCK)
 
-def is_door_open(pin):
-    door, _ = get_door_state(pin)
-    return door == OPEN
+def open_door(door_name):
 
-def is_door_closed(pin):
-    door, _ = get_door_state(pin)
-    return door == CLOSE
+    unlock_door(door_name)
+    sleep(0.5)
 
-def is_door_locked(pin):
-    _, lock = get_door_state(pin)
-    return lock == LOCK
+    print("Opening door", door_name)
 
-def is_door_unlocked(pin):
-    _, lock = get_door_state(pin)
-    return lock == UNLOCK
+    _, lock = get_door_state(door_name)
+    set_door_state(door_name, OPEN, lock)
 
-def update_door_state(pin, door_state, lock_state):
-	# Send state to SBC to update the API
-	pass
+    update_door_history(door_name, "OPEN")
+
+    sleep(5)
+    close_door(door_name)
+
+
+def close_door(door_name):
+    print("Closing door", door_name)
+
+    _, lock = get_door_state(door_name)
+    set_door_state(door_name, CLOSE, lock)
+
+    update_door_history(door_name, "CLOSED")
+
+    sleep(1)
+    lock_door(door_name)
+
+
+def unlock_door(door_name):
+    print("Unlocking door", door_name)
+
+    door, _ = get_door_state(door_name)
+    set_door_state(door_name, door, UNLOCK)
+
+    update_door_history(door_name, "UNLOCKED")
+
+
+def lock_door(door_name):
+    print("Locking door", door_name)
+
+    door, _ = get_door_state(door_name)
+    set_door_state(door_name, door, LOCK)
+
+    update_door_history(door_name, "LOCKED")
+
 
 # Setup and loop
 
+
 def setup():
-    for p in DOOR_PINS:
-        pinMode(p, OUT)
-        close_door(p)
-        lock_door(p)
+    for door_name in DOOR_PINS.keys():
+        pinMode(DOOR_PINS[door_name], OUT)
+        close_door(door_name)
+
     pinMode(SBC_CMD_PIN, IN)
 
-def loop():
-	cmd = customRead(SBC_CMD_PIN)
 
-	for pin in DOOR_PINS:
-		if cmd == f"OPEN:{pin}":
-			open_door(pin)
-		elif cmd == f"CLOSE:{pin}":
-			close_door(pin)
-		elif cmd == f"UNLOCK:{pin}":
-			unlock_door(pin)
-		elif cmd == f"LOCK:{pin}":
-			lock_door(pin)
+def loop():
+    cmd = customRead(SBC_CMD_PIN)
+
+    if cmd in ["NONE", "0", ""]:
+        return
+
+    if not (
+        cmd.startswith("OPEN:")
+        or cmd.startswith("CLOSE:")
+        or cmd.startswith("UNLOCK:")
+        or cmd.startswith("LOCK:")
+    ):
+        print("Unknown command format received:", cmd)
+        return
+
+    door_name = cmd.split(":")[1]
+
+    if cmd.startswith("OPEN:"):
+        open_door(door_name)
+    elif cmd.startswith("CLOSE:"):
+        close_door(door_name)
+    elif cmd.startswith("UNLOCK:"):
+        unlock_door(door_name)
+    elif cmd.startswith("LOCK:"):
+        lock_door(door_name)
+
 
 # Entry point
 
 setup()
-
 while True:
-	loop()
-	sleep(0.1)
+    loop()

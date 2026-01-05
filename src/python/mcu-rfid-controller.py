@@ -2,7 +2,7 @@ from gpio import *
 from time import *
 
 # Mapping: id -> pin (D1 pins for RFID lights)
-RFID_SENSORS = {"Entrance": 1, "Lab": 2, "Office": 3, "Lockers": 4}
+RFID_SENSORS = {"main-entrance": 1, "Lab": 2, "Office": 3, "Lockers": 4}
 
 # Command from SBC
 SBC_CMD_PIN = 0
@@ -11,11 +11,6 @@ SBC_CMD_PIN = 0
 VALID = 0
 INVALID = 1
 WAITING = 2
-
-# Command debounce (seconds)
-CMD_DEDUP_DELAY = 0.3
-last_cmd = None
-last_cmd_time = 0.0
 
 # Core functions
 
@@ -55,18 +50,9 @@ def poll_rfid_commands():
         print("Unknown command format received:", cmd)
         return
 
-    now = time()
-
-    # --- Deduplicate burst commands ---
-    if cmd == last_cmd and (now - last_cmd_time) < CMD_DEDUP_DELAY:
-        return
-
-    last_cmd = cmd
-    last_cmd_time = now
-
     reader_id = cmd.split(":")[1]
 
-    if reader_id not in RFID_SENSORS:
+    if reader_id not in RFID_SENSORS.keys():
         print("Unknown reader ID in command:", reader_id)
 
     pin = RFID_SENSORS[reader_id]

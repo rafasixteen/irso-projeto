@@ -1,30 +1,16 @@
 [
-    {
-        "id": 5,
-        "name": "Rafael",
-        "role": "admin",
-        "gender": "M",
-        "rfidTag": "394a6ee5"
-    },
-    {
-        "id": 10,
-        "name": "Luana",
-        "role": "member",
-        "gender": "F",
-        "rfidTag": "b061b370"
-    },
-    {
-        "id": 11,
-        "name": "Luana",
-        "role": "admin",
-        "gender": "F",
-        "rfidTag": "3eb71946"
-    },
-    {
-        "id": 13,
-        "name": "Mica",
-        "role": "admin",
-        "gender": "M",
-        "rfidTag": "d4bcf22e"
-    }
+	{
+		"id": 5,
+		"name": "Rafael",
+		"role": "admin",
+		"gender": "M",
+		"rfidTag": "1000"
+	},
+	{
+		"id": 10,
+		"name": "Luana",
+		"role": "member",
+		"gender": "F",
+		"rfidTag": "1001"
+	}
 ]
