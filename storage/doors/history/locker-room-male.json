@@ -70,5 +70,21 @@
     {
         "timestamp": "2026-01-05T22:21:45+00:00",
         "state": "LOCKED"
+    },
+    {
+        "timestamp": "2026-01-06T15:17:37+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-06T15:17:38+00:00",
+        "state": "LOCKED"
+    },
+    {
+        "timestamp": "2026-01-06T15:21:14+00:00",
+        "state": "CLOSED"
+    },
+    {
+        "timestamp": "2026-01-06T15:21:17+00:00",
+        "state": "LOCKED"
     }
 ]

@@ -8,5 +8,10 @@
         "timestamp": "2026-01-05T17:52:17+00:00",
         "rfid_tag": 154,
         "message": "access granted"
+    },
+    {
+        "timestamp": "2026-01-06T15:19:37+00:00",
+        "rfid_tag": 154,
+        "message": "access granted"
     }
 ]
