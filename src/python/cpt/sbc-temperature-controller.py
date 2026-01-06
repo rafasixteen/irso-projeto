@@ -3,7 +3,7 @@ from time import *
 from realhttp import *
 import json
 
-# API Configuration
+# CONFIGURAÇÕES DA API
 PROTOCOL = "http"
 DOMAIN = "localhost:8000"
 URL = f"{PROTOCOL}://{DOMAIN}"
@@ -13,34 +13,12 @@ http = RealHTTPClient()
 
 TERMOSTAT_PIN = 1
 
-
-# Function to read and parse thermostat
-def read_termostat(pin):
-    cmd = customRead(pin)
-
-    if cmd:
-        parts = cmd.split(",")
-        if len(parts) == 4:
-            state = int(parts[0].strip())
-            try:
-                temperature = float(parts[1])
-                autoCool = float(parts[2])
-                autoHeat = float(parts[3])
-                return (
-                    convert_state_to_string(state),
-                    round(temperature, 1),
-                    round(autoCool, 1),
-                    round(autoHeat, 1),
-                )
-            except:
-                # Parsing failed
-                return None, None, None, None
-
-    # cmd missing or malformed
-    return None, None, None, None
-
+# FUNÇÕES DE LEITURA E PARSING
 
 def convert_state_to_string(state):
+    """
+    Converte o estado numérico do termostato para texto.
+    """
     if state == 0:
         return "OFF"
     elif state == 1:
@@ -52,6 +30,39 @@ def convert_state_to_string(state):
     else:
         return "UNKNOWN"
 
+
+def read_termostat(pin):
+    """
+    Lê o valor do pino e tenta fazer o parse da string "State,Temp,Cool,Heat".
+    """
+    cmd = customRead(pin)
+
+    # Verifica se cmd não é vazio ou None
+    if cmd:
+        # Tenta partir a string
+        parts = cmd.split(",")
+        if len(parts) == 4:
+            try:
+                state = int(parts[0].strip())
+                temperature = float(parts[1])
+                autoCool = float(parts[2])
+                autoHeat = float(parts[3])
+                
+                return (
+                    convert_state_to_string(state),
+                    round(temperature, 1),
+                    round(autoCool, 1),
+                    round(autoHeat, 1),
+                )
+            except:
+                # Se falhar a conversão para int/float
+                return None, None, None, None
+
+    # Se o cmd for inválido ou malformado
+    return None, None, None, None
+
+
+# FUNÇÕES DE API
 
 def on_http_done(status, data):
     if status != 204:
@@ -82,18 +93,24 @@ def send_air_conditioner_to_api(state):
     http.post(url, body)
 
 
+# SETUP E LOOP
+
 def setup():
-    pinMode(TERMOSTAT_PIN, INPUT)
+    # CORREÇÃO: Mudei de INPUT para IN.
+    # Como estamos a ler dados de um sensor (customRead), o modo correto é IN.
+    pinMode(TERMOSTAT_PIN, IN)
 
 
 def loop():
+    # 1. Leitura
     state, temperature, autoCool, autoHeat = read_termostat(TERMOSTAT_PIN)
 
+    # Se a leitura falhar, sai e tenta na próxima iteração
     if state is None or temperature is None:
         print("Failed to read thermostat data")
         return
 
-    # Determine Furnace and AC states
+    # 2. Lógica de decisão (Mantida exatamente igual ao original)
     if state == "OFF":
         furnace_state = "OFF"
         ac_state = "OFF"
@@ -114,10 +131,11 @@ def loop():
             furnace_state = "OFF"
             ac_state = "OFF"
     else:
+        # Estado desconhecido
         furnace_state = "OFF"
         ac_state = "OFF"
 
-    # Send to API
+    # 3. Envio para API (Envia sempre, a cada ciclo)
     send_temperature_to_api(temperature)
     send_furnace_to_api(furnace_state)
     send_air_conditioner_to_api(ac_state)
@@ -129,7 +147,7 @@ def loop():
     print("----------------------")
 
 
-# Entry point
+# Ponto de entrada
 setup()
 while True:
     loop()
