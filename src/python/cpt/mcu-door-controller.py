@@ -55,8 +55,18 @@ def set_door_state(door_name, door_state, lock_state):
 def get_door_state(door_name):
     pin = DOOR_PINS[door_name]
     state = customRead(pin)
-    door_state, lock_state = map(int, state.split(","))
-    return door_state, lock_state
+
+    # Handle invalid / empty reads
+    if not state or "," not in state:
+        # Default safe state
+        return CLOSE, LOCK
+
+    parts = state.split(",")
+
+    if len(parts) != 2 or parts[0] == "" or parts[1] == "":
+        return CLOSE, LOCK
+
+    return int(parts[0]), int(parts[1])
 
 
 # Convenience functions

@@ -38,7 +38,18 @@ pending_door_cmd = None
 
 
 def detect_card_hover(reader_id, pin):
-    card_id = int(customRead(pin))
+    raw_value = customRead(pin)
+
+    # Guard against empty / None / non-numeric values
+    if raw_value is None:
+        return
+
+    raw_value = str(raw_value).strip()
+    if raw_value == "" or not raw_value.isdigit():
+        last_seen[reader_id] = 0
+        return
+
+    card_id = int(raw_value)
 
     # No card present
     if card_id <= 0:
